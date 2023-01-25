@@ -35,36 +35,56 @@ steps[, table(`geo_location:I2`, `geo_location:I1`)]
 steps[`geo_location:I1`=='6']  # Tubuai
 steps[`geo_location:I2`=='Va'] # Rangiroa
 
-steps[, geocode := `geo_location:I1`]
+steps[, codeloc := `geo_location:I1`]
 
-steps[geocode==6, `geo_location:I2`]
-steps[geocode==51, `geo_location:I2`]
-steps[geocode==6, geocode := 53]  # assume I2 is correct
-steps[geocode==51, geocode := 53] # assume I2 is correct
+steps[codeloc==6, `geo_location:I2`]
+steps[codeloc==51, `geo_location:I2`]
+steps[codeloc==6, codeloc := 53]  # assume I2 is correct
+steps[codeloc==51, codeloc := 53] # assume I2 is correct
 
-steps1 <- merge(steps, loc, by.x = 'geocode', by.y = 'code', all.x = TRUE)
-dim(steps)[1]==dim(steps1)[1]
-steps1[`geo_location:I2`=='Va', .(geocode, commune)]
+steps <- merge(steps, loc, by.x = 'codeloc', by.y = 'code', all.x = TRUE)
+steps[`geo_location:I2`=='Va', .(codeloc, commune)]
 
-sum(is.na(steps1$commune))==0
+sum(is.na(steps$commune))==0
 
-steps1[, table(archipel)]
+steps[, table(archipel)]
 
 
 #' clean-up age groups
 #' 
-steps1[, table(`step1:demographics:age`)]
-steps1[, table(`step1:demographics:agerange`)]
-steps1[, table(`step1:demographics:agerange`, `step1:demographics:age`)] # looks OK
-# 9 participants aged 70 (not eligible)
+steps[, table(`step1:demographics:age`)]
+steps[, table(`step1:demographics:agerange`)]
+steps[, table(`step1:demographics:agerange`, `step1:demographics:age`)] # looks OK
+steps[, age := `step1:demographics:age`]
+steps[, agegroup := `step1:demographics:agerange`]
 
-steps1[, age := `step1:demographics:age`]
-steps1[, agegroup := `step1:demographics:agerange`]
+# 9 participants aged 70 (not eligible)
+steps[age==70, .(codeloc, commune, age, agegroup)]
+steps[, eligible := TRUE]
+steps[age==70, eligible := FALSE]
+
+
+# 382 participants with no age/agegroup info: no consent
+steps[agegroup=='', .(codeloc, commune, age, agegroup, 
+                       `step1:demographics:DOB:C2a`,
+                       `step1:demographics:DOB:C2b`,
+                       `step1:demographics:DOB:C2c`,
+                       `step1:demographics:C2`,
+                       `step1:demographics:C3`,
+                       `consent_language_name:I5`,
+                       `consent_language_name:I6`,
+                       `consent_language_name:I8`,
+                       `consent_language_name:I9`,
+                       `consent_language_name:I10`)]
+steps[agegroup=='', eligible := FALSE]
 
 
 #' Recruitment by stratum
 #' 
-
+steps[, .N]
+steps[, .N, by=eligible] # age documented and in (18-69)
+steps[eligible==F, table(archipel)]
+steps[eligible==T, table(agegroup, archipel)]
 
 
 
