@@ -33,11 +33,9 @@ a1[, `fraction (%)`:= round(enrolled*100/pop, 2)]  # sampling fraction
 a1[, weight := round(pop/enrolled, 2)]    # sampling weights
 (a1)
 
-save_as_html(flextable(a1), path=here('html/sampleDesc.html'))
-
 
 # missed individuals
-(steps[, .N, by=enroll][, percent := round(100*N/sum(N), 2)][])
+(a0 <- steps[, .N, by=enroll][, percent := round(100*N/sum(N), 2)][])
 
 
 # missed individuals by stratum
@@ -51,5 +49,5 @@ save_as_html(flextable(a2), path=here('html/missedDesc.html'))
 # none were missed in Makemo, Raivavae, Tubuai
 
 # save
-save(a1, a2, file=here('data/report.Rdata'))
+save(a0, a1, a2, file=here('data/report.Rdata'))
 

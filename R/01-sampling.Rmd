@@ -31,7 +31,7 @@ load(here('data/report.Rdata'))
 
 ``` 
 
-
+Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). 
 
 
 
