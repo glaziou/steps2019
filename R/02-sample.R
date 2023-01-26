@@ -25,15 +25,15 @@ load(here('data/steps.Rdata')) # loads latest pre-processed data
 
 
 # sample size by stratum
-(out <- steps[enroll==1, .N, by=.(archipel, sex, agecat, agegr, pop)])
+(a1 <- steps[enroll==1, .N, by=.(archipel, sex, agecat, agegr, pop)])
 # 3 geo strata
-out[archipel %in% c('Australes','Marquises','Tuamotu'), archipel := 'Autres']
-out <- out[, .(enrolled=sum(N), pop=sum(pop)), by=.(archipel, sex, age=agegr)]
-out[, `fraction (%)`:= round(enrolled*100/pop, 2)]  # sampling fraction
-out[, weight := round(pop/enrolled, 2)]    # sampling weights
-(out)
+a1[archipel %in% c('Australes','Marquises','Tuamotu'), archipel := 'Autres']
+a1 <- a1[, .(enrolled=sum(N), pop=sum(pop)), by=.(archipel, sex, age=agegr)]
+a1[, `fraction (%)`:= round(enrolled*100/pop, 2)]  # sampling fraction
+a1[, weight := round(pop/enrolled, 2)]    # sampling weights
+(a1)
 
-save_as_html(flextable(out), path=here('html/sampleDesc.html'))
+save_as_html(flextable(a1), path=here('html/sampleDesc.html'))
 
 
 # missed individuals
@@ -41,14 +41,15 @@ save_as_html(flextable(out), path=here('html/sampleDesc.html'))
 
 
 # missed individuals by stratum
-out2 <- steps[, .N, by=.(commune, enroll)]
-out2[ ,percent := round(100 * (N / sum(N)), 2)]
-setkey(out2, commune)
-(out2 <- out2[enroll==0, .(commune, missed=N, percent)])
+a2 <- steps[, .N, by=.(commune, enroll)]
+a2[ ,percent := round(100 * (N / sum(N)), 2)]
+setkey(a2, commune)
+(a2 <- a2[enroll==0, .(commune, missed=N, percent)])
 
-save_as_html(flextable(out2), path=here('html/missedDesc.html'))
+save_as_html(flextable(a2), path=here('html/missedDesc.html'))
 
 # none were missed in Makemo, Raivavae, Tubuai
 
-fwrite(out, file=here('csv/sample.csv'))
+# save
+save(a1, a2, file=here('data/report.Rdata'))
 
