@@ -1,5 +1,5 @@
 #' ---
-#' title: Pre-process STEPS
+#' title: Sample description STEPS
 #' author: Philippe Glaziou
 #' date: 2023/01/25
 #' output:
@@ -32,8 +32,12 @@ out <- out[, .(enrolled=sum(N), pop=sum(pop)), by=.(archipel, sex, age=agegr)]
 out[, `fraction (%)`:= round(enrolled*100/pop, 2)]  # sampling fraction
 out[, weight := round(pop/enrolled, 2)]    # sampling weights
 (out)
+
 save_as_html(flextable(out), path=here('html/sampleDesc.html'))
 
+
+# missed individuals
+(steps[, .N, by=enroll][, percent := round(100*N/sum(N), 2)][])
 
 
 # missed individuals by stratum
@@ -41,6 +45,7 @@ out2 <- steps[, .N, by=.(commune, enroll)]
 out2[ ,percent := round(100 * (N / sum(N)), 2)]
 setkey(out2, commune)
 (out2 <- out2[enroll==0, .(commune, missed=N, percent)])
+
 save_as_html(flextable(out2), path=here('html/missedDesc.html'))
 
 # none were missed in Makemo, Raivavae, Tubuai
