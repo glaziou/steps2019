@@ -63,10 +63,10 @@ steps[, agegroup := `step1:demographics:agerange`]
 steps[, agegr := agegroup]
 steps[agegr %in% c('45-59', '60-69'), agegr := '45-69']
 
-# 9 participants aged 70 (not eligible)
+# 9 participants aged 70 (not enroll)
 steps[age==70, .(codeloc, commune, age, agegroup)]
-steps[, eligible := TRUE]
-steps[age==70, eligible := FALSE]
+steps[, enroll := 1]
+steps[age==70, enroll := 0]
 
 
 # 382 participants with no age/agegroup info: no consent
@@ -81,18 +81,18 @@ steps[agegroup=='', .(codeloc, commune, age, agegroup,
                        `consent_language_name:I8`,
                        `consent_language_name:I9`,
                        `consent_language_name:I10`)]
-steps[agegroup=='', eligible := FALSE]
+steps[agegroup=='', enroll := 0]
 
 
 #' Recruitment by stratum
 #' 
 steps[, .N]
-steps[, .N, by=eligible] # age documented and in (18-69)
-steps[eligible==F, table(archipel)]
-steps[eligible==T, table(agegr, archipel)]
+steps[, .N, by=enroll] # age documented and in (18-69)
+steps[enroll==0, table(archipel)]
+steps[enroll==1, table(agegr, archipel)]
 
 # Distribution in IDV
-steps[eligible==T & archipel=='IDV', table(agegr, commune)]
+steps[enroll==1 & archipel=='IDV', table(agegr, commune)]
 
 
 
@@ -102,18 +102,24 @@ s <- copy(steps)
 steps[agegr=='18-29', agecat := 1]
 steps[agegr=='30-44', agecat := 2]
 steps[agegr=='45-69', agecat := 3]
-steps[, sex := `step1:demographics:C1`]
-steps[eligible==TRUE, table(sex)]
-steps[eligible==TRUE, table(sex, agecat)]
+steps[`step1:demographics:C1`==1, sex := 'M']
+steps[`step1:demographics:C1`==2, sex := 'F']
+
+steps[enroll==1, table(sex)]
+steps[enroll==1, table(sex, agecat)]
 
 pop[archipelago %in% c('Australes','Marquises'), archipel := archipelago]
 pop[archipelago=='Société (Îles-du-vent)', archipel := 'IDV']
 pop[archipelago=='Société (Îles-sous-le-vent)', archipel := 'ISLV']
 pop[archipelago=='Tuamotu-Gambier', archipel := 'Tuamotu']
-pop[, sex := gender]
+pop[gender==1, sex := 'M']
+pop[gender==2, sex := 'F']
 
-steps <- merge(steps[eligible==TRUE], pop[,.(archipel, sex, agecat=age_cat, pop=N)], by=c('archipel','sex','agecat'), all.x=TRUE)
-steps[, .(archipel, sex, agecat, pop)]
+steps <- merge(steps, pop[,.(archipel, sex, agecat=age_cat, pop=N)], by=c('archipel','sex','agecat'), all.x=TRUE)
+setkey(steps, enroll)
+
+steps[enroll==0, .(archipel)]
+steps[enroll==1, .(archipel, sex, agecat, pop)]
 
 
 # 3 geo strata
@@ -121,16 +127,8 @@ steps[, gstratum := archipel]
 steps[archipel %in% c('Australes','Marquises','Tuamotu'), gstratum := 'Autres']
 
 
-# sample size by stratum
-(out <- steps[, .N, by=.(archipel, sex, agecat, pop)])
-# 3 geo strata
-out[, gstratum := archipel]
-out[archipel %in% c('Australes','Marquises','Tuamotu'), gstratum := 'Autres']
-out <- out[, .(N=sum(N), pop=sum(pop)), by=.(gstratum, sex, agecat)]
-out[, f := N/pop]  # sampling fraction
-out[, w := 1/f]    # sampling weights
-(out)
-fwrite(out, file=here('output/sample.csv'))
 
-
-
+#' save
+#' 
+fwrite(steps, file = here(paste0('csv/steps_', Sys.Date(), '.csv')))
+save(steps, file = here('data/steps.Rdata'))
