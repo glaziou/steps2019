@@ -31,7 +31,16 @@ load(here('data/report.Rdata'))
 
 ``` 
 
-Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). 
+Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). Le tableau 1 montre la distribution des personnes manquantes par commune.
+
+### Tableau 1. Distribution des personnes non investiguées par commune
+
+
+```{r tab_1}
+a2 <- setnames(a2, names(a2), c('commune','manquant','pourcentage'))
+flextable(a2)
+
+```
 
 
 
