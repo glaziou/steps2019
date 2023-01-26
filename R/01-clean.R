@@ -91,6 +91,9 @@ steps[, .N, by=eligible] # age documented and in (18-69)
 steps[eligible==F, table(archipel)]
 steps[eligible==T, table(agegr, archipel)]
 
+# Distribution in IDV
+steps[eligible==T & archipel=='IDV', table(agegr, commune)]
+
 
 
 #' Include pop and calculate weights
