@@ -127,5 +127,7 @@ out <- out[, .(N=sum(N), pop=sum(pop)), by=.(gstratum, sex, agecat)]
 out[, f := N/pop]  # sampling fraction
 out[, w := 1/f]    # sampling weights
 (out)
+fwrite(out, file=here('output/sample.csv'))
+
 
 
