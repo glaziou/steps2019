@@ -12,7 +12,7 @@ fig_width: 12
 fig_caption: FALSE 
 --- 
 
-# Description de l'échantillon
+# STEPS 2019 - Description de l'échantillon
   
 ```{r setup, include=FALSE} 
 # Chapter 1
@@ -28,64 +28,96 @@ library(here)
 library(knitr)
 library(kableExtra)
 library(gtsummary)
+library(flextable)
 
 load(here('data/steps.Rdata'))
 load(here('data/report.Rdata'))
+
+theme_gtsummary_language('fr')
+theme_gtsummary_journal('lancet')
 
 ``` 
 
 Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes, `r sum(steps$consent==1)` ont fourni leur consentement à participer, dont `r sum(steps$consent==1 & steps$enroll==0)` qui n'étaient pas éligibles (âge supérieur à 69 ans). 
 
-Le tableau 1 montre la distribution des `r sum(steps$enroll==0)` personnes manquantes (échantillonnées mais non enrollées dans l'étude) ainsi que leur pourcentage du total par commune.
+Le tableau 1 montre la distribution des `r sum(steps$enroll==0)` personnes manquantes (échantillonnées mais non enrollées dans l'étude) ainsi que leur pourcentage du total par archipel et par commune.
 
 
-### Tableau 1. Distribution des personnes manquantes par commune
+### Tableau 1. Distribution des personnes par archipel
 
 ```{r tab_1}
-kbl(a2, format='html', align=c('lrr'), 
-    col.names=c('Commune','N','%')) |> 
-  kable_classic(full_width = F, position = "left") |>
-   scroll_box(width = "500px", height = "300px")
+tbl_summary(steps[ ,.(
+  Inclus = inclus,
+  Archipel = archipel
+)], by = Inclus, percent = 'row') |>
+  modify_header(label = "**Inclusions**") %>% # update the column header
+  bold_labels() |> add_overall(last = TRUE) 
 
 ```
-Pourcentage du total par commune
 
 
-### Tableau 2. Distribution des personnes investiguées par commune
+### Tableau 2. Distribution des personnes par commune
 
 ```{r tab_2}
-setnames(a1, names(a1)[6], paste0(names(a1)[6], footnote_marker_symbol(1)))
-a1[c(2:6,8:12,14:18), archipel := '']
-a1[c(2:3,5:6,8:9,11:12,14:15,17:18), sex := '']
-kbl(
-  a1,
-  format = 'html',
-  align = c('lccrrc'),
-  col.names = c(
-    'Archipel',
-    'Sexe',
-    'Age',
-    'N',
-    'Population',
-    'Fraction*(%)'
-  )
-) |>  
-  kable_classic(full_width = F, position = "left") |>
-  footnote(symbol = "Fraction d'échantillonage") 
+tbl_summary(steps[ ,.(
+  Inclus = inclus,
+  Commune = commune
+)], by = Inclus, percent = 'row') |>
+  modify_header(label = "**Inclusions**") %>% # update the column header
+  bold_labels() |> add_overall(last = TRUE) 
 
 ```
 
-### Tableau 3. Distribution des charactères démographiques des personnes investiguées archipel
 
-```{r ft.align="left"}
+
+### Tableau 3. Fraction d'échantillonnage par strata 
+
+```{r tab_3}
+a1[c(2:3,5:6,8:9), archipel := '']
+
+flextable(a1[, .(
+  Strata = archipel,
+  Age = age,
+  N = enrolled,
+  Population = pop,
+  `Fraction (%)` = fraction
+)])
+
+```
+
+
+
+### Tableau 4. Fraction d'échantillonnage par stratum géographique, sexe et âge 
+
+```{r tab_4}
+a2[c(2:6,8:12,14:18), archipel := '']
+a2[c(2:3,5:6,8:9,11:12,14:15,17:18), sex := '']
+
+flextable(a2[, .(
+  Strata = archipel,
+  Sex = sex,
+  Age = age,
+  N = enrolled,
+  Population = pop,
+  `Fraction (%)` = fraction
+)])
+
+```
+
+
+
+### Tableau 5. Caractères démographiques des participants
+
+```{r tab_5}
 tbl_summary(steps[enroll == 1, .(
-  `Age median (IQR)` = age,
+  Age = age,
   Education = edu,
-  Naissance = place,
+  `Lieu de naissance` = place,
+  `Secteur professionel` = work,
   archipel
 )], by = archipel) |>
   modify_header(label = "**Variable**") %>% # update the column header
-  bold_labels() |> add_overall()
+  bold_labels() |> add_overall(last = TRUE) 
 
 ```
 
