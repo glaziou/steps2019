@@ -27,19 +27,22 @@ library(data.table)
 library(here)
 library(knitr)
 library(kableExtra)
+library(gtsummary)
 
 load(here('data/steps.Rdata'))
 load(here('data/report.Rdata'))
 
 ``` 
 
-Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). Le tableau 1 montre la distribution des personnes manquantes ainsi que leur pourcentage du total par commune.
+Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes, `r sum(steps$consent==1)` ont fourni leur consentement à participer, dont `r sum(steps$consent==1 & steps$enroll==0)` qui n'étaient pas éligibles (âge supérieur à 69 ans). 
+
+Le tableau 1 montre la distribution des `r sum(steps$enroll==0)` personnes manquantes (échantillonnées mais non enrollées dans l'étude) ainsi que leur pourcentage du total par commune.
 
 
 ### Tableau 1. Distribution des personnes manquantes par commune
 
 ```{r tab_1}
-kbl(a0, format='html', align=c('lrr'), 
+kbl(a2, format='html', align=c('lrr'), 
     col.names=c('Commune','N','%')) |> 
   kable_classic(full_width = F, position = "left") |>
    scroll_box(width = "500px", height = "300px")
@@ -72,7 +75,18 @@ kbl(
 
 ```
 
+### Tableau 3. Distribution des charactères démographiques des personnes investiguées archipel
 
+```{r ft.align="left"}
+tbl_summary(steps[enroll == 1, .(
+  `Age median (IQR)` = age,
+  Education = edu,
+  Naissance = place,
+  archipel
+)], by = archipel) |>
+  modify_header(label = "**Variable**") %>% # update the column header
+  bold_labels() |> add_overall()
 
+```
 
 

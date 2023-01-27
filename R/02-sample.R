@@ -36,15 +36,17 @@ a1[, `fraction (%)`:= signif(enrolled*100/pop, 2)]  # sampling fraction
 
 # missed individuals
 (a0 <-
-    steps[, .N, by = .(enroll, commune)][, percent := signif(100 * N / sum(N), 2), by =
-                                           commune][enroll == 0, .(commune, N, percent)])
+    steps[, .N, by = .(enroll)][, percent := signif(100 * N / sum(N), 2)])
 
 
 # missed individuals by stratum
-a2 <- steps[, .N, by=.(commune, enroll)]
-a2[ ,percent := round(100 * (N / sum(N)), 2)]
-setkey(a2, commune)
-(a2 <- a2[enroll==0, .(commune, missed=N, percent)])
+(a2 <-
+    steps[, .N, by = .(enroll, commune)][, percent := signif(100 * N / sum(N), 2), by =
+                                           commune][enroll == 0, .(commune, N, percent)])
+# a2 <- steps[, .N, by=.(commune, enroll)]
+# a2[ ,percent := round(100 * (N / sum(N)), 2)]
+# setkey(a2, commune)
+# (a2 <- a2[enroll==0, .(commune, missed=N, percent)])
 
 save_as_html(flextable(a2), path=here('html/missedDesc.html'))
 
