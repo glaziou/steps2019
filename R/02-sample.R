@@ -48,7 +48,7 @@ a1[, `fraction (%)`:= signif(enrolled*100/pop, 2)]  # sampling fraction
 # setkey(a2, commune)
 # (a2 <- a2[enroll==0, .(commune, missed=N, percent)])
 
-save_as_html(flextable(a2), path=here('html/missedDesc.html'))
+# save_as_html(flextable(a2), path=here('html/missedDesc.html'))
 
 # none were missed in Makemo, Raivavae, Tubuai
 
