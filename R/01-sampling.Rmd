@@ -33,18 +33,19 @@ load(here('data/report.Rdata'))
 
 ``` 
 
-Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). Le tableau 1 montre la distribution des personnes manquantes par commune.
+Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). Le tableau 1 montre la distribution des personnes manquantes ainsi que leur pourcentage du total par commune.
 
 
 ### Tableau 1. Distribution des personnes manquantes par commune
 
 ```{r tab_1}
-kbl(a2, format='html', align=c('lcc'), 
-    col.names=c('Commune','Manquants','%')) |> 
+kbl(a0, format='html', align=c('lrr'), 
+    col.names=c('Commune','N','%')) |> 
   kable_classic(full_width = F, position = "left") |>
    scroll_box(width = "500px", height = "300px")
 
 ```
+Pourcentage du total par commune
 
 
 ### Tableau 2. Distribution des personnes investiguées par commune

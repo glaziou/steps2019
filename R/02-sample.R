@@ -35,7 +35,9 @@ a1[, `fraction (%)`:= signif(enrolled*100/pop, 2)]  # sampling fraction
 
 
 # missed individuals
-(a0 <- steps[, .N, by=enroll][, percent := round(100*N/sum(N), 2)][])
+(a0 <-
+    steps[, .N, by = .(enroll, commune)][, percent := signif(100 * N / sum(N), 2), by =
+                                           commune][enroll == 0, .(commune, N, percent)])
 
 
 # missed individuals by stratum
