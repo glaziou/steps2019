@@ -29,8 +29,8 @@ load(here('data/steps.Rdata')) # loads latest pre-processed data
 # 3 geo strata
 a1[archipel %in% c('Australes','Marquises','Tuamotu'), archipel := 'Autres']
 a1 <- a1[, .(enrolled=sum(N), pop=sum(pop)), by=.(archipel, sex, age=agegr)]
-a1[, `fraction (%)`:= round(enrolled*100/pop, 2)]  # sampling fraction
-a1[, weight := round(pop/enrolled, 2)]    # sampling weights
+a1[, `fraction (%)`:= signif(enrolled*100/pop, 2)]  # sampling fraction
+# a1[, weight := signif(pop/enrolled, 2)]    # sampling weights
 (a1)
 
 
