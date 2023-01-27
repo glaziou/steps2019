@@ -25,6 +25,8 @@ knitr::opts_chunk$set(
 )
 library(data.table)
 library(here)
+library(knitr)
+library(kableExtra)
 
 load(here('data/steps.Rdata'))
 load(here('data/report.Rdata'))
@@ -33,15 +35,42 @@ load(here('data/report.Rdata'))
 
 Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes,`r a0$N[1]` n'ont pu être investiguées (`r round(a0$percent[1], 1)`%). Le tableau 1 montre la distribution des personnes manquantes par commune.
 
-### Tableau 1. Distribution des personnes non investiguées par commune
 
+### Tableau 1. Distribution des personnes manquantes par commune
 
 ```{r tab_1}
-a2 <- setnames(a2, names(a2), c('commune','manquant','pourcentage'))
-flextable(a2)
+kbl(a2, format='html', align=c('lcc'), 
+    col.names=c('Commune','Manquants','%')) |> 
+  kable_classic(full_width = F, position = "left") |>
+   scroll_box(width = "500px", height = "300px")
 
 ```
 
+
+### Tableau 2. Distribution des personnes investiguées par commune
+
+```{r tab_2}
+setnames(a1, names(a1)[6], paste0(names(a1)[6], footnote_marker_symbol(1)))
+a1[c(2:6,8:12,14:18), archipel := '']
+a1[c(2:3,5:6,8:9,11:12,14:15,17:18), sex := '']
+kbl(
+  a1,
+  format = 'html',
+  align = c('lcc'),
+  col.names = c(
+    'Archipel',
+    'Sexe',
+    'Age',
+    'N',
+    'Population',
+    'Fraction*(%)',
+    'Poids'
+  )
+) |>  
+  kable_classic(full_width = F, position = "left") |>
+  footnote(symbol = "Fraction d'échantillonage") 
+
+```
 
 
 
