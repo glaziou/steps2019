@@ -23,29 +23,34 @@ library(flextable)
 
 load(here('data/steps.Rdata')) # loads latest pre-processed data
 
-steps[enroll==1, inclus := 'Inclus']
-steps[enroll==0, inclus := 'Exclus']
+steps[enroll == 1, inclus := 'Inclus']
+steps[enroll == 0, inclus := 'Exclus']
 
 # sample size by stratum
-(a1 <- steps[enroll==1, .N, by=.(archipel, sex, agecat, agegr, pop)])
+(a1 <-
+    steps[enroll == 1, .N, by = .(archipel, sex, agecat, agegr, pop)])
 # 3 geo strata
-a1[archipel %in% c('Australes','Marquises','Tuamotu'), archipel := 'Autres']
-a1 <- a1[, .(enrolled=sum(N), pop=sum(pop)), by=.(archipel, age=agegr)]
-a1[, fraction:= signif(enrolled*100/pop, 2)]  # sampling fraction
+a1[archipel %in% c('Australes', 'Marquises', 'Tuamotu'), archipel := 'Autres']
+a1 <-
+  a1[, .(enrolled = sum(N), pop = sum(pop)), by = .(archipel, age = agegr)]
+a1[, fraction := signif(enrolled * 100 / pop, 2)]  # sampling fraction
 
 
-(a2 <- steps[enroll==1, .N, by=.(archipel, sex, agecat, agegr, pop)])
+(a2 <-
+    steps[enroll == 1, .N, by = .(archipel, sex, agecat, agegr, pop)])
 # 3 geo strata
-a2[archipel %in% c('Australes','Marquises','Tuamotu'), archipel := 'Autres']
-a2 <- a2[, .(enrolled=sum(N), pop=sum(pop)), by=.(archipel, sex, age=agegr)]
-a2[, fraction:= signif(enrolled*100/pop, 2)]  # sampling fraction
+a2[archipel %in% c('Australes', 'Marquises', 'Tuamotu'), archipel := 'Autres']
+a2 <-
+  a2[, .(enrolled = sum(N), pop = sum(pop)), by = .(archipel, sex, age =
+                                                      agegr)]
+a2[, fraction := signif(enrolled * 100 / pop, 2)]  # sampling fraction
 
- 
+
 # # missed individuals
 # (a0 <-
 #     steps[, .N, by = .(enroll)][, percent := signif(100 * N / sum(N), 2)])
-# 
-# 
+#
+#
 # # missed individuals by stratum
 # (a2 <-
 #     steps[, .N, by = .(enroll, commune)][, percent := signif(100 * N / sum(N), 2), by =
@@ -60,5 +65,4 @@ a2[, fraction:= signif(enrolled*100/pop, 2)]  # sampling fraction
 # none were missed in Makemo, Raivavae, Tubuai
 
 # save
-save(steps, a1, a2, file=here('data/report.Rdata'))
-
+save(steps, a1, a2, file = here('data/report.Rdata'))

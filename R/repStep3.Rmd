@@ -1,0 +1,39 @@
+--- 
+title: "Step 3" 
+author: "Philippe Glaziou" 
+date: "`r Sys.Date()`" 
+output:  
+  html_fragment: 
+  # Don’t include a table of contents 
+  toc: no 
+# Set standard figure width to 12 inches 
+fig_width: 12 
+# Don’t write figure captions 
+fig_caption: FALSE 
+--- 
+
+# STEPS 2019 - Step 3, mesures biologiques
+  
+```{r setup, include=FALSE} 
+# Chapter 1
+# Set options, load data, utility functions 
+knitr::opts_chunk$set(
+  echo = FALSE,
+  results = "asis",
+  message = FALSE,
+  warning = FALSE
+)
+library(data.table)
+library(here)
+library(knitr)
+library(kableExtra)
+library(gtsummary)
+library(flextable)
+
+load(here('data/steps.Rdata'))
+load(here('data/report.Rdata'))
+
+theme_gtsummary_language('fr')
+theme_gtsummary_journal('lancet')
+
+``` 
