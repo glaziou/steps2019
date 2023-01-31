@@ -45,6 +45,8 @@ a2 <-
                                                       agegr)]
 a2[, fraction := signif(enrolled * 100 / pop, 2)]  # sampling fraction
 
+steps[, sexe := sex]
+steps[sex=='M', sexe := 'H']
 
 # # missed individuals
 # (a0 <-

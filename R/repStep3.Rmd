@@ -30,7 +30,6 @@ library(kableExtra)
 library(gtsummary)
 library(flextable)
 
-load(here('data/steps.Rdata'))
 load(here('data/report.Rdata'))
 
 theme_gtsummary_language('fr')

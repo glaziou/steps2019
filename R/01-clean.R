@@ -26,8 +26,29 @@ library(haven)
 #'
 steps <-
   fread(here('input/PF_STEPS2019_V3_2_1_results.csv')) # STEP 1
+step2 <-
+  fread(here('input/PF_STEPS2019_V3_2_2_results.csv')) # STEP 2
+step3 <-
+  fread(here('input/PF_STEPS2019_V3_2_Lab_results.csv')) # STEP 3
+
+
 loc <- fread(here('input/loc.csv'))  # geo codes
 pop <- as.data.table(read_dta(here('input/ponderation_draft.dta')))
+
+#' unique IDs - use the QR code
+#' 
+steps[, uid := `identification:qr_scanned`]
+step2[, uid := `identification:qr_scanned`]
+step3[, uid := `qr_code:qr_scanned`]
+
+steps[is.na(uid), uid := `identification:qr_manual`]
+step2[, sum(is.na(uid))==0]
+step3[, sum(is.na(uid))==0]
+
+length(steps$uid); length(step2$uid); length(step3$uid)
+length(intersect(steps$uid, step2$uid))
+length(intersect(steps$uid, step3$uid))
+
 
 
 
@@ -142,6 +163,21 @@ steps[, gstratum := archipel]
 steps[archipel %in% c('Australes', 'Marquises', 'Tuamotu'), gstratum := 'Autres']
 
 
+# Step1 weights
+out1 <- steps[agegr!='', .N, by=.(gstratum,agecat)]
+pop[, gstratum := archipel]
+pop[archipel %in% c('Australes', 'Marquises', 'Tuamotu'), gstratum := 'Autres']
+out2 <- pop[, .(pop=sum(N)), by=.(gstratum,age_cat)]
+out3 <- merge(out1, out2, by.x=c("gstratum", "agecat"), by.y=c("gstratum", "age_cat"))
+tmp <-
+  merge(steps,
+        out3[, .(gstratum, agecat, w1 = pop / N)],
+        by = c('gstratum', 'agecat'),
+        all.x = TRUE)
+dim(steps); dim(tmp)
+steps <- copy(tmp)
+
+
 # consent
 sum(is.na(steps$`consent_language_name:I5`)) == 0
 steps[, consent := `consent_language_name:I5`]
@@ -189,6 +225,46 @@ levels(steps$work) <- c(
   'Invalide',
   '-'
 )
+
+
+# Step2
+step2[, height := `height_weight:M11`]
+step2[, weight := `height_weight:M12`]
+
+step2[height>250, height := NA]
+step2[weight>300, weight := NA]
+step2[, bmi := weight/(height/100)^2]
+
+step2[bmi<18.5, bmigr := 0]
+step2[bmi>=18.5 & bmi<25, bmigr := 1]
+step2[bmi>=25 & bmi<30, bmigr := 2]
+step2[bmi>=30 & bmi<35, bmigr := 3]
+step2[bmi>=35 & bmi<40, bmigr := 4]
+step2[bmi>=40, bmigr := 5]
+step2[, bmigr := factor(
+  bmigr, levels = 0:5,
+  labels = c(
+    'Maigreur [<18.5]',
+    'Norme [18.5 - 24.9]',
+    'Surpoids [25 - 29.9]',
+    'Obésité modérée [30 - 34.9]',
+    'Obésité sévère [35 - 39.9]',
+    'Obésité massive [\u226540]'
+  ),
+  ordered = TRUE
+)]
+step2[bmi<25, overweight := 0]
+step2[bmi>=25, overweight := 1]
+step2[bmi<30, obese := 0]
+step2[bmi>=30, obese := 1]
+
+tmp2 <-
+  merge(steps,
+        step2[, .(uid, height, weight, bmi, overweight, obese, bmigr)], by = 'uid', all.x = TRUE)
+dim(steps); dim(step2); dim(tmp2)
+
+steps <- copy(tmp2)
+rm(tmp, tmp2)
 
 
 #' save

@@ -25,16 +25,17 @@ knitr::opts_chunk$set(
 )
 library(data.table)
 library(here)
+library(survey)
 library(knitr)
 library(kableExtra)
 library(gtsummary)
 library(flextable)
+library(labelled)
 
-load(here('data/steps.Rdata'))
 load(here('data/report.Rdata'))
 
 theme_gtsummary_language('fr')
-theme_gtsummary_journal('lancet')
+theme_gtsummary_journal('jama')
 
 ``` 
 
@@ -46,3 +47,148 @@ Les mesures anthropométriques incluent:
 * le périmètre abdominal
 * la tension artérielle
 
+Les tableaux suivants montrent ces indicateurs ajustés pour prendre en compte les effets d'échantillonage (pondération et stratification).
+
+
+### Tableau 2.1. Corpulence
+
+```{r tab_2_1}
+var_label(steps$bmigr) <- "Corpulence [IMC]"
+
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + agegr,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  agegr,
+                                                  bmigr)]) |>
+  
+  tbl_svysummary(include = c(bmigr),
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels()
+
+```
+
+
+
+### Tableau 2.2. Corpulence par sexe
+
+```{r tab_2_2}
+
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + Age,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr), .(
+                                   uid,
+                                   w1,
+                                   gstratum,
+                                   Sexe=sexe,
+                                   Age=agegr,
+                                   bmigr
+                                 )]) |>
+  tbl_svysummary(include = c(bmigr),
+                 by = Sexe,
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "**Sexe**",
+                stat_1 = "**Femmes**",
+                stat_2 = "**Hommes**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  bold_labels() 
+
+```
+
+
+
+
+### Tableau 2.3. Corpulence par groupe d'âge (hommes et femmes)
+
+```{r tab_2_3}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + Age,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr), .(
+                                   uid,
+                                   w1,
+                                   gstratum,
+                                   Sexe=sexe,
+                                   Age=agegr,
+                                   bmigr
+                                 )]) |>
+  tbl_svysummary(include = c(bmigr),
+                 by = Age,
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "**Groupe d'âge**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(all_stat_cols() ~ "**{level}**") |>
+  bold_labels() 
+
+```
+
+### Tableau 2.4. Corpulence par groupe d'âge (hommes)
+
+```{r tab_2_4}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + Age,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr) & sex == "M" , .(uid,
+                                                                w1,
+                                                                gstratum,
+                                                                Age = agegr,
+                                                                bmigr)]) |>
+  tbl_svysummary(
+    include = c(bmigr),
+    by = Age,
+    statistic = list(all_categorical() ~ "{p}")
+  ) |>
+  modify_header(label ~ "**Groupe d'âge**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(all_stat_cols() ~ "**{level}**") |>
+  bold_labels() 
+
+```
+
+### Tableau 2.5. Corpulence par groupe d'âge (femmes)
+
+```{r tab_2_5}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr) & sex == "F", .(uid,
+                                                               w1,
+                                                               gstratum,
+                                                               Age = agegr,
+                                                               bmigr)]) |>
+  tbl_svysummary(
+    include = c(bmigr),
+    by = Age,
+    statistic = list(all_categorical() ~ "{p}")
+  ) |>
+  modify_header(label ~ "**Groupe d'âge**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
