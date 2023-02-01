@@ -1,14 +1,14 @@
 --- 
-title: "Step 2" 
-author: "Philippe Glaziou" 
-date: "`r Sys.Date()`" 
+title: "Enquête STEP 2019, Polynésie Française"
+subtitle: "Step 2, mesures anthropométriques"
 output:  
-  html_fragment: 
-  # Don’t include a table of contents 
-  toc: no 
-# Set standard figure width to 12 inches 
+  html_document: 
+    mode: selfcontained
+    toc: yes 
+    tocfloat: true
+    number_sections: false
+    theme: flatly
 fig_width: 12 
-# Don’t write figure captions 
 fig_caption: FALSE 
 lang: fr
 --- 
@@ -37,9 +37,9 @@ load(here('data/report.Rdata'))
 theme_gtsummary_language('fr')
 theme_gtsummary_journal('jama')
 
-``` 
+labelled::var_label(steps$bmigr) <- "Corpulence [IMC]"
 
-# STEPS 2019 - Step 2, mesures anthropométriques
+``` 
 
 Les mesures anthropométriques incluent:
 
@@ -53,8 +53,6 @@ Les tableaux suivants montrent ces indicateurs ajustés pour prendre en compte l
 ### Tableau 2.1. Corpulence
 
 ```{r tab_2_1}
-var_label(steps$bmigr) <- "Corpulence [IMC]"
-
 survey::svydesign(id = ~ uid,
                   weights = ~ w1,
                   strata = ~gstratum + agegr,
@@ -192,3 +190,65 @@ survey::svydesign(id = ~ uid,
   bold_labels()
 
 ```
+
+
+### Tableau 2.6. Facteurs de risque d'obésité (analyse uni- et multivariée, ajustées pour les effets d'échantillonnage)
+
+```{r tab_2_6}
+d <- survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  data = steps[enroll == 1 &
+                                 !is.na(obese), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  sexe,
+                                                  Age = agegr,
+                                                  Education = edu,
+                                                  obese)]) 
+
+
+
+t1 <- tbl_uvregression(d,
+    method = svyglm,
+    label = list(gstratum ~ "Archipel", sexe ~ "Sexe"),
+    include = c('gstratum', 'sexe', 'Age', 'Education'),
+    hide_n = TRUE,
+    y = obese,
+    method.args = list(family = quasibinomial),
+    exponentiate = TRUE
+  ) |>
+  modify_header(update = list(estimate ~ "**OR (IC 95%)**")) |>
+#  add_q() |>
+  modify_footnote(estimate = "OR = rapport de cotes, IC = intervalle de confiance", abbreviation = TRUE) |>
+  add_significance_stars(hide_se = TRUE,
+                         hide_p = FALSE,
+                         pattern = "{p.value}{stars}")
+
+m <-
+  svyglm(
+    obese ~ gstratum + sexe + Age + Education,
+    design = d,
+    family = "quasibinomial"
+  )
+
+t2 <- tbl_regression(m,
+               label = list(gstratum ~ "Archipel", sexe ~ "Sexe"),
+               exponentiate = TRUE) |>
+  modify_header(update = list(estimate ~ "**aOR (IC 95%)**")) |>
+  modify_footnote(estimate = "aOR = rapport de cotes ajusté", abbreviation = TRUE) |>
+#  add_global_p() |>
+  add_significance_stars(
+    hide_se = TRUE,
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+  
+# modify_footnote(everything() ~ NA, abbreviation = TRUE)
+
+tbl_merge(
+    tbls        = list(t1, t2),
+    tab_spanner = c("**Analyse univariée**", "**Analyse multivariée**")
+  )
+
+```
+

@@ -45,8 +45,16 @@ a2 <-
                                                       agegr)]
 a2[, fraction := signif(enrolled * 100 / pop, 2)]  # sampling fraction
 
+
+# update var values
 steps[, sexe := sex]
-steps[sex=='M', sexe := 'H']
+steps[sex=='M', sexe := 'Homme']
+steps[sex=='F', sexe := 'Femme']
+steps[, sexe := factor(sexe, levels=c('Homme','Femme'))]
+steps[, gstratum := factor(gstratum, 
+                           levels=c('IDV','ISLV','Autres'),
+                           labels=c('Iles du vent','Iles sous le vent','Autres archipels'))]
+
 
 # # missed individuals
 # (a0 <-

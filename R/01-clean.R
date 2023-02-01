@@ -208,6 +208,7 @@ levels(steps$edu) <- c(
   'Post-université',
   '-'
 )
+steps[edu=='-',edu := NA]
 
 
 # work
@@ -225,6 +226,7 @@ levels(steps$work) <- c(
   'Invalide',
   '-'
 )
+steps[work=='-',work := NA]
 
 
 # Step2

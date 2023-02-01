@@ -22,29 +22,33 @@ library(here)
 library(rmarkdown)
 
 
-# preprocessed data
+# load datasets
 source(here('R/repData.R'))
 
 
 # generate html pages for each step
+# sample description
 rmarkdown::render(
   here('R/repSample.Rmd'),
   output_dir = here('html'),
   output_file = 'samplingDescription.html'
 )
 
+# step 1, questionnaire
 rmarkdown::render(
   here('R/repStep1.Rmd'),
   output_dir = here('html'),
   output_file = 'step1.html'
 )
 
+# step 2, physical measures
 rmarkdown::render(
   here('R/repStep2.Rmd'),
   output_dir = here('html'),
   output_file = 'step2.html'
 )
 
+# step 3, biological measures
 rmarkdown::render(
   here('R/repStep3.Rmd'),
   output_dir = here('html'),

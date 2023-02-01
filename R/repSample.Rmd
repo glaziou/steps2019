@@ -1,19 +1,18 @@
 --- 
-title: "Sample" 
-author: "Philippe Glaziou" 
-date: "`r Sys.Date()`" 
+title: "Enquête STEP 2019, Polynésie Française"
+subtitle: "Description de l'échantillon"
 output:  
-  html_fragment: 
-  # Don’t include a table of contents 
-  toc: no 
-# Set standard figure width to 12 inches 
+  html_document: 
+    mode: selfcontained
+    toc: yes 
+    tocfloat: true
+    number_sections: false
+    theme: flatly
 fig_width: 12 
-# Don’t write figure captions 
 fig_caption: FALSE 
+lang: fr
 --- 
 
-# STEPS 2019 - Description de l'échantillon
-  
 ```{r setup, include=FALSE} 
 # Chapter 1
 # Set options, load data, utility functions 
