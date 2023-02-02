@@ -60,11 +60,11 @@ Les tableaux suivants montrent ces indicateurs ajustés pour prendre en compte l
 
 ```{r tab_2_1_1}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   agegr,
                                                   bmigr)]) |>
@@ -88,12 +88,12 @@ survey::svydesign(id = ~ uid,
 ```{r tab_2_1_2}
 
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(
                                    uid,
-                                   w1,
+                                   w2,
                                    gstratum,
                                    Sexe=sexe,
                                    Age=agegr,
@@ -120,12 +120,12 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_1_3}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(
                                    uid,
-                                   w1,
+                                   w2,
                                    gstratum,
                                    Sexe=sexe,
                                    Age=agegr,
@@ -148,11 +148,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_1_4}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr) & sex == "M" , .(uid,
-                                                                w1,
+                                                                w2,
                                                                 gstratum,
                                                                 Age = agegr,
                                                                 bmigr)]) |>
@@ -175,10 +175,10 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_1_5}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1, strata = ~gstratum + Age,
+                  weights = ~ w2, strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr) & sex == "F", .(uid,
-                                                               w1,
+                                                               w2,
                                                                gstratum,
                                                                Age = agegr,
                                                                bmigr)]) |>
@@ -203,11 +203,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_1_6}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   agegr,
                                                   bmigr,
@@ -231,11 +231,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_1_7}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   agegr,
                                                   bmigr,
@@ -263,11 +263,11 @@ survey::svydesign(id = ~ uid,
 ```{r tab_2_1_8}
 tf <- survey::svydesign(
   id = ~ uid,
-  weights = ~ w1,
+  weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
                  !is.na(bmigr) & sex == "F", .(uid,
-                                               w1,
+                                               w2,
                                                gstratum,
                                                Age = agegr,
                                                bmigr,
@@ -290,11 +290,11 @@ tf <- survey::svydesign(
 
 tm <- survey::svydesign(
   id = ~ uid,
-  weights = ~ w1,
+  weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
                  !is.na(bmigr) & sex == "M", .(uid,
-                                               w1,
+                                               w2,
                                                gstratum,
                                                Age = agegr,
                                                bmigr,
@@ -318,11 +318,11 @@ tm <- survey::svydesign(
 
 tt <- survey::svydesign(
   id = ~ uid,
-  weights = ~ w1,
+  weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
                  !is.na(bmigr), .(uid,
-                                  w1,
+                                  w2,
                                   gstratum,
                                   Age = agegr,
                                   bmigr,
@@ -358,11 +358,11 @@ tbl_merge(
 ```{r tab_2_1_9}
 d <- survey::svydesign(
   id = ~ uid,
-  weights = ~ w1,
+  weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
                  !is.na(hta), .(uid,
-                                  w1,
+                                  w2,
                                   gstratum,
                                   Sexe = sexe,
                                   Age = agegr,
@@ -406,11 +406,11 @@ tbl_stack(tbls = list(t1, t2))
 ### Tableau 2.2.1 Prévalence de l'hypertension artérielle (HTA)
 ```{r tab_2_2_1}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
+                  weights = ~ w3,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(uid,
-                                                  w2,
+                                                  w3,
                                                   gstratum,
                                                   agegr,
                                                   bmigr,
@@ -434,11 +434,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_2_2}
 d <- survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
+                  weights = ~ w3,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(obese), .(uid,
-                                                  w2,
+                                                  w3,
                                                   gstratum,
                                                   sexe,
                                                   Age = agegr,
@@ -497,11 +497,11 @@ tbl_merge(
 ### Tableau 2.3.1 Prévalence du diabète
 ```{r tab_2_3_1}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
+                  weights = ~ w3,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(diabete), .(uid,
-                                                  w2,
+                                                  w3,
                                                   gstratum,
                                                   agegr,
                                                   bmigr,
@@ -523,11 +523,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_3_2}
 d <- survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
+                  weights = ~ w3,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(diabete), .(uid,
-                                                  w2,
+                                                  w3,
                                                   gstratum,
                                                   sexe,
                                                   Age = agegr,
