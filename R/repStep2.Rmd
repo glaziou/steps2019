@@ -1,11 +1,11 @@
 --- 
 title: "Enquête STEP 2019, Polynésie Française"
-subtitle: "Step 2, mesures anthropométriques"
+subtitle: "Steps 2 and 3, mesures anthropométriques et biologiques"
 output:  
   html_document: 
     mode: selfcontained
     toc: yes 
-    tocfloat: true
+    toc_float: true
     number_sections: false
     theme: flatly
 fig_width: 12 
@@ -47,12 +47,18 @@ Les mesures anthropométriques incluent:
 * le périmètre abdominal
 * la tension artérielle
 
+Les mesures biologiques incluent:
+
+* la glycémie à jeun
+
 Les tableaux suivants montrent ces indicateurs ajustés pour prendre en compte les effets d'échantillonage (pondération et stratification).
 
 
-### Tableau 2.1. Corpulence
+## 2.1 Corpulence
 
-```{r tab_2_1}
+### Tableau 2.1.1 Corpulence
+
+```{r tab_2_1_1}
 survey::svydesign(id = ~ uid,
                   weights = ~ w1,
                   strata = ~gstratum + agegr,
@@ -77,9 +83,9 @@ survey::svydesign(id = ~ uid,
 
 
 
-### Tableau 2.2. Corpulence par sexe
+### Tableau 2.1.2 Corpulence par sexe
 
-```{r tab_2_2}
+```{r tab_2_1_2}
 
 survey::svydesign(id = ~ uid,
                   weights = ~ w1,
@@ -110,9 +116,9 @@ survey::svydesign(id = ~ uid,
 
 
 
-### Tableau 2.3. Corpulence par groupe d'âge (hommes et femmes)
+### Tableau 2.2.3 Corpulence par groupe d'âge (hommes et femmes)
 
-```{r tab_2_3}
+```{r tab_2_1_3}
 survey::svydesign(id = ~ uid,
                   weights = ~ w1,
                   strata = ~gstratum + Age,
@@ -138,9 +144,9 @@ survey::svydesign(id = ~ uid,
 
 ```
 
-### Tableau 2.4. Corpulence par groupe d'âge (hommes)
+### Tableau 2.1.4 Corpulence par groupe d'âge (hommes)
 
-```{r tab_2_4}
+```{r tab_2_1_4}
 survey::svydesign(id = ~ uid,
                   weights = ~ w1,
                   strata = ~gstratum + Age,
@@ -165,11 +171,11 @@ survey::svydesign(id = ~ uid,
 
 ```
 
-### Tableau 2.5. Corpulence par groupe d'âge (femmes)
+### Tableau 2.1.5 Corpulence par groupe d'âge (femmes)
 
-```{r tab_2_5}
+```{r tab_2_1_5}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w1, strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr) & sex == "F", .(uid,
                                                                w1,
@@ -192,11 +198,244 @@ survey::svydesign(id = ~ uid,
 ```
 
 
-### Tableau 2.6. Facteurs de risque d'obésité (analyse uni- et multivariée, ajustées pour les effets d'échantillonnage)
 
-```{r tab_2_6}
+### Tableau 2.1.6 Prévalence du surpoids
+
+```{r tab_2_1_6}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + agegr,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  agegr,
+                                                  bmigr,
+                                                  Surpoids)]) |>
+
+  tbl_svysummary(include = c(Surpoids),
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels()
+
+```
+
+
+
+### Tableau 2.1.7 Prévalence de l'obésité
+
+```{r tab_2_1_7}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + agegr,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  agegr,
+                                                  bmigr,
+                                                  Obese)]) |>
+
+  tbl_svysummary(include = c(Obese),
+                 label = list(Obese ~ "Obésité"),
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels()
+
+```
+
+
+
+
+
+### Tableau 2.1.8 Obésité abdominale
+
+```{r tab_2_1_8}
+tf <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + Age,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr) & sex == "F", .(uid,
+                                               w1,
+                                               gstratum,
+                                               Age = agegr,
+                                               bmigr,
+                                               sexe,
+                                               grosbide)]
+) |>
+  tbl_svysummary(
+    include = c(bmigr),
+    by = grosbide,
+    label = grosbide ~ 'Obésité abdominale',
+    statistic = list(all_categorical() ~ "{p}")
+  ) |>
+  modify_header(label ~ "**Obésité abdominale**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+tm <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + Age,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr) & sex == "M", .(uid,
+                                               w1,
+                                               gstratum,
+                                               Age = agegr,
+                                               bmigr,
+                                               sex,
+                                               sexe,
+                                               grosbide)]
+) |>
+  tbl_svysummary(
+    include = c(bmigr),
+    by = grosbide,
+    label = grosbide ~ 'Obésité abdominale',
+    statistic = list(all_categorical() ~ "{p}")
+  ) |>
+  modify_header(label ~ "**Obésité abdominale**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+tt <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + Age,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr), .(uid,
+                                  w1,
+                                  gstratum,
+                                  Age = agegr,
+                                  bmigr,
+                                  sexe,
+                                  grosbide)]
+) |>
+  tbl_svysummary(
+    include = c(bmigr),
+    by = grosbide,
+    label = grosbide ~ 'Obésité abdominale',
+    statistic = list(all_categorical() ~ "{p}")
+  ) |>
+  modify_header(label ~ "**Obésité abdominale**") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+tbl_merge(
+    tbls        = list(tf, tm, tt),
+    tab_spanner = c("**Femmes**", "**Hommes**", "**Total**")
+)
+
+
+```
+
+
+
+### Tableau 2.1.9 Facteurs de risque d'obésité (analyse uni- et multivariée, ajustées pour les effets d'échantillonnage)
+
+```{r tab_2_1_9}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + Age,
+  data = steps[enroll == 1 &
+                 !is.na(hta), .(uid,
+                                  w1,
+                                  gstratum,
+                                  Sexe = sexe,
+                                  Age = agegr,
+                                  hta,
+                                  HTA)]
+)
+
+# svymean(~hta, d, deff=T)
+
+m1 <-
+  svyglm(HTA ~ Sexe -1,
+         design = d,
+         family = "quasibinomial")
+m2 <-
+  svyglm(HTA ~ Age -1,
+         design = d,
+         family = "quasibinomial")
+t1 <- tbl_regression(m1,
+                     exponentiate = TRUE) |>
+  modify_header(update = list(estimate ~ "**Prevalence (IC 95%)**")) |>
+  modify_footnote(everything() ~ NA, abbreviation = TRUE) |>
+  modify_column_hide(columns = p.value) |>
+  bold_labels()
+  
+
+t2 <- tbl_regression(m2,
+                     exponentiate = TRUE) |>
+  modify_header(update = list(estimate ~ "**Prevalence (IC 95%)**")) |>
+  modify_footnote(everything() ~ NA, abbreviation = TRUE) |>
+  modify_column_hide(columns = p.value) |>
+  bold_labels()
+
+tbl_stack(tbls = list(t1, t2))
+
+```
+
+
+
+## 2.2 Hypertension artérielle
+
+### Tableau 2.2.1 Prévalence de l'hypertension artérielle (HTA)
+```{r tab_2_2_1}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + agegr,
+                  data = steps[enroll == 1 &
+                                 !is.na(bmigr), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  agegr,
+                                                  bmigr,
+                                                  HTA)]) |>
+
+  tbl_svysummary(include = c(HTA),
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels()
+
+```
+
+
+
+### Tableau 2.2.2 Facteurs de risque d'HTA (analyse uni- et multivariée, ajustées pour les effets d'échantillonnage)
+
+```{r tab_2_2_2}
 d <- survey::svydesign(id = ~ uid,
                   weights = ~ w1,
+                  strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(obese), .(uid,
                                                   w1,
@@ -204,16 +443,17 @@ d <- survey::svydesign(id = ~ uid,
                                                   sexe,
                                                   Age = agegr,
                                                   Education = edu,
-                                                  obese)]) 
+                                                  obese,
+                                                  HTA=hta)]) 
 
-
+# svymean(~obese, d, deff=T)
 
 t1 <- tbl_uvregression(d,
     method = svyglm,
-    label = list(gstratum ~ "Archipel", sexe ~ "Sexe"),
-    include = c('gstratum', 'sexe', 'Age', 'Education'),
+    label = list(gstratum ~ "Archipel", sexe ~ "Sexe", obese ~ "Obésité"),
+    include = c('gstratum', 'sexe', 'Age', 'Education','obese'),
     hide_n = TRUE,
-    y = obese,
+    y = HTA,
     method.args = list(family = quasibinomial),
     exponentiate = TRUE
   ) |>
@@ -226,13 +466,13 @@ t1 <- tbl_uvregression(d,
 
 m <-
   svyglm(
-    obese ~ gstratum + sexe + Age + Education,
+    HTA ~ gstratum + sexe + Age + Education + obese,
     design = d,
     family = "quasibinomial"
   )
 
 t2 <- tbl_regression(m,
-               label = list(gstratum ~ "Archipel", sexe ~ "Sexe"),
+               label = list(gstratum ~ "Archipel", sexe ~ "Sexe", obese ~ "Obésité"),
                exponentiate = TRUE) |>
   modify_header(update = list(estimate ~ "**aOR (IC 95%)**")) |>
   modify_footnote(estimate = "aOR = rapport de cotes ajusté", abbreviation = TRUE) |>
@@ -242,13 +482,99 @@ t2 <- tbl_regression(m,
     hide_p = FALSE,
     pattern = "{p.value}{stars}"
   )
-  
 # modify_footnote(everything() ~ NA, abbreviation = TRUE)
 
 tbl_merge(
-    tbls        = list(t1, t2),
-    tab_spanner = c("**Analyse univariée**", "**Analyse multivariée**")
-  )
+  tbls        = list(t1, t2),
+  tab_spanner = c("**Analyse univariée**", "**Analyse multivariée**")
+)
 
 ```
 
+
+## 2.3 Diabète
+
+### Tableau 2.3.1 Prévalence du diabète
+```{r tab_2_3_1}
+survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + agegr,
+                  data = steps[enroll == 1 &
+                                 !is.na(diabete), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  agegr,
+                                                  bmigr,
+                                                  Diabete)]) |>
+
+  tbl_svysummary(include = c(Diabete),
+                 statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels()
+
+```
+
+### Tableau 2.3.2 Facteurs de risque du diabète (analyse uni- et multivariée, ajustées pour les effets d'échantillonnage)
+
+```{r tab_2_3_2}
+d <- survey::svydesign(id = ~ uid,
+                  weights = ~ w1,
+                  strata = ~gstratum + Age,
+                  data = steps[enroll == 1 &
+                                 !is.na(diabete), .(uid,
+                                                  w1,
+                                                  gstratum,
+                                                  sexe,
+                                                  Age = agegr,
+                                                  Education = edu,
+                                                  Obese,
+                                                  HTA,
+                                                  Diabete)]) 
+
+t1 <- tbl_uvregression(d,
+    method = svyglm,
+    label = list(gstratum ~ "Archipel", sexe ~ "Sexe", Obese ~ "Obésité"),
+    include = c('gstratum', 'sexe', 'Age', 'Education','Obese','HTA'),
+    hide_n = TRUE,
+    y = Diabete,
+    method.args = list(family = quasibinomial),
+    exponentiate = TRUE
+  ) |>
+  modify_header(update = list(estimate ~ "**OR (IC 95%)**")) |>
+#  add_q() |>
+  modify_footnote(estimate = "OR = rapport de cotes, IC = intervalle de confiance", abbreviation = TRUE) |>
+  add_significance_stars(hide_se = TRUE,
+                         hide_p = FALSE,
+                         pattern = "{p.value}{stars}")
+
+m <-
+  svyglm(
+    Diabete ~ gstratum + sexe + Age + Education + Obese + HTA,
+    design = d,
+    family = "quasibinomial"
+  )
+
+t2 <- tbl_regression(m,
+               label = list(gstratum ~ "Archipel", sexe ~ "Sexe", Obese ~ "Obésité"),
+               exponentiate = TRUE) |>
+  modify_header(update = list(estimate ~ "**aOR (IC 95%)**")) |>
+  modify_footnote(estimate = "aOR = rapport de cotes ajusté", abbreviation = TRUE) |>
+#  add_global_p() |>
+  add_significance_stars(
+    hide_se = TRUE,
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+# modify_footnote(everything() ~ NA, abbreviation = TRUE)
+
+tbl_merge(
+  tbls        = list(t1, t2),
+  tab_spanner = c("**Analyse univariée**", "**Analyse multivariée**")
+)
+
+```

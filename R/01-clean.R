@@ -229,7 +229,8 @@ levels(steps$work) <- c(
 steps[work=='-',work := NA]
 
 
-# Step2
+# Step2 ----------------------
+# weight
 step2[, height := `height_weight:M11`]
 step2[, weight := `height_weight:M12`]
 
@@ -260,13 +261,59 @@ step2[bmi>=25, overweight := 1]
 step2[bmi<30, obese := 0]
 step2[bmi>=30, obese := 1]
 
+
+# HTA
+step2[, diastol := `step2_physical_measurements:average_DBP`]
+step2[, systol := `step2_physical_measurements:average_SBP`]
+sum(step2$diastol > step2$systol, na.rm=TRUE)==0
+step2[!is.na(diastol) & !is.na(systol), hta := 0]
+step2[!is.na(hta) & (diastol >= 90 | systol >= 140), hta := 1]
+
+
+# belly 
+step2[, waist := `waist:M14`]
+step2[waist==888, waist := NA]
+
+# step 3
+step2[ ,mange := `step3_biochem_measurements:B1`]
+step2[mange==2, mange := 0]
+step2[ ,glycemie := `step3_biochem_measurements:blood_test:B5`]
+step2[glycemie==777, glycemie := NA]
+
+# step2[ ,urine := `step3_biochem_measurements:urinary_sodium_creatinine:B10`]
+
+
+
+# merge step2 with steps
+#
 tmp2 <-
   merge(steps,
-        step2[, .(uid, height, weight, bmi, overweight, obese, bmigr)], by = 'uid', all.x = TRUE)
-dim(steps); dim(step2); dim(tmp2)
+        step2[, .(uid,
+                  height,
+                  weight,
+                  bmi,
+                  overweight,
+                  obese,
+                  bmigr,
+                  diastol,
+                  systol,
+                  hta,
+                  waist,
+                  mange,
+                  glycemie)], by = 'uid', all.x = TRUE)
+dim(steps)
+dim(step2)
+dim(tmp2)
 
 steps <- copy(tmp2)
 rm(tmp, tmp2)
+
+# add calculated variables
+steps[!is.na(waist), bigbelly := 0]
+steps[waist >= 88 & sex=='F', bigbelly := 1]
+steps[waist >= 102 & sex=='M', bigbelly := 1]
+steps[!is.na(glycemie), diabete := 0]
+steps[glycemie > 110, diabete := 1]
 
 
 #' save

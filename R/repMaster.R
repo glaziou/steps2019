@@ -41,16 +41,10 @@ rmarkdown::render(
   output_file = 'step1.html'
 )
 
-# step 2, physical measures
+# step 2, physical and biological measures
 rmarkdown::render(
   here('R/repStep2.Rmd'),
   output_dir = here('html'),
   output_file = 'step2.html'
 )
 
-# step 3, biological measures
-rmarkdown::render(
-  here('R/repStep3.Rmd'),
-  output_dir = here('html'),
-  output_file = 'step3.html'
-)

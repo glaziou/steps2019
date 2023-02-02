@@ -54,6 +54,11 @@ steps[, sexe := factor(sexe, levels=c('Homme','Femme'))]
 steps[, gstratum := factor(gstratum, 
                            levels=c('IDV','ISLV','Autres'),
                            labels=c('Iles du vent','Iles sous le vent','Autres archipels'))]
+steps[, grosbide := factor(bigbelly, levels=0:1, labels=c('Non','Oui'))]
+steps[, Surpoids := factor(overweight, levels=0:1, labels=c('Non','Oui'))]
+steps[, Obese := factor(obese, levels=0:1, labels=c('Non','Oui'))]
+steps[, HTA := factor(hta, levels=0:1, labels=c('Non','Oui'))]
+steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 
 
 # # missed individuals
