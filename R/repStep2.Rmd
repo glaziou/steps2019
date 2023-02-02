@@ -406,11 +406,11 @@ tbl_stack(tbls = list(t1, t2))
 ### Tableau 2.2.1 Prévalence de l'hypertension artérielle (HTA)
 ```{r tab_2_2_1}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(bmigr), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   agegr,
                                                   bmigr,
@@ -434,11 +434,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_2_2}
 d <- survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(obese), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   sexe,
                                                   Age = agegr,
@@ -497,11 +497,11 @@ tbl_merge(
 ### Tableau 2.3.1 Prévalence du diabète
 ```{r tab_2_3_1}
 survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + agegr,
                   data = steps[enroll == 1 &
                                  !is.na(diabete), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   agegr,
                                                   bmigr,
@@ -523,11 +523,11 @@ survey::svydesign(id = ~ uid,
 
 ```{r tab_2_3_2}
 d <- survey::svydesign(id = ~ uid,
-                  weights = ~ w1,
+                  weights = ~ w2,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(diabete), .(uid,
-                                                  w1,
+                                                  w2,
                                                   gstratum,
                                                   sexe,
                                                   Age = agegr,

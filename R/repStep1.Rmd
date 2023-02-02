@@ -35,6 +35,7 @@ theme_gtsummary_language('fr')
 theme_gtsummary_journal('lancet')
 
 ``` 
+
 ## Tabac {.tabset}
 
 

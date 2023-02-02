@@ -316,6 +316,49 @@ steps[!is.na(glycemie), diabete := 0]
 steps[glycemie > 110, diabete := 1]
 
 
+# merge step3 with steps
+#
+tmp3 <-
+  merge(steps,
+        step3[, .(uid,
+                  sodium=`urinary_sodium_creatinine:B14`,
+                  creat=`urinary_sodium_creatinine:B15`)], by = 'uid', all.x = TRUE)
+dim(steps)
+dim(step3)
+dim(tmp3)
+
+steps <- copy(tmp3)
+rm(tmp3)
+
+
+# Step2 weights
+out1 <- steps[!is.na(obese) & enroll==1, .N, by=.(gstratum,agecat)]
+out3 <- merge(out1, out2, by.x=c("gstratum", "agecat"), by.y=c("gstratum", "age_cat"))
+tmp <-
+  merge(steps,
+        out3[, .(gstratum, agecat, w2 = pop / N)],
+        by = c('gstratum', 'agecat'),
+        all.x = TRUE)
+dim(steps); dim(tmp)
+steps <- copy(tmp)
+
+
+# Step3 weights
+out1 <- steps[!is.na(glycemie) & enroll==1, .N, by=.(gstratum,agecat)]
+out3 <- merge(out1, out2, by.x=c("gstratum", "agecat"), by.y=c("gstratum", "age_cat"))
+tmp <-
+  merge(steps,
+        out3[, .(gstratum, agecat, w3 = pop / N)],
+        by = c('gstratum', 'agecat'),
+        all.x = TRUE)
+dim(steps); dim(tmp)
+steps <- copy(tmp)
+
+# urines done in only one geo stratum, no weighting possible
+steps[, sum(!is.na(creat)), by=gstratum]
+
+
+
 #' save
 #'
 fwrite(steps, file = here(paste0('csv/steps_', Sys.Date(), '.csv')))
