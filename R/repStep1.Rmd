@@ -28,6 +28,7 @@ library(knitr)
 library(kableExtra)
 library(gtsummary)
 library(flextable)
+library(survey)
 
 load(here('data/report.Rdata'))
 
@@ -42,11 +43,11 @@ theme_gtsummary_journal('lancet')
 ```{r tab_1_1_1a}
 d <- survey::svydesign(
   id = ~ uid,
-  weights = ~ w3,
+  weights = ~ w1,
   strata = ~ gstratum + agegr,
   data = steps[enroll == 1 &
                  !is.na(tobacco.T1), .(uid,
-                                    w3,
+                                    w1,
                                     gstratum,
                                     agegr,
                                     bmigr,
@@ -92,11 +93,11 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```{r tab_1_1_2a}
 d <- survey::svydesign(
   id = ~ uid,
-  weights = ~ w3,
+  weights = ~ w1,
   strata = ~ gstratum + agegr,
   data = steps[enroll == 1 &
                  !is.na(tobacco.T8), .(uid,
-                                    w3,
+                                    w1,
                                     gstratum,
                                     agegr,
                                     bmigr,
