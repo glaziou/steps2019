@@ -1,5 +1,6 @@
 --- 
 title: "Enquête STEP 2019, Polynésie Française"
+subtitle: "Steps 2 et 3, mesures anthropométriques et biologiques"
 output:  
   html_document: 
     mode: selfcontained
@@ -39,8 +40,6 @@ theme_gtsummary_journal('jama')
 labelled::var_label(steps$bmigr) <- "Corpulence [IMC]"
 
 ``` 
-
-# Steps 2 et 3, mesures anthropométriques et biologiques
 
 Les mesures anthropométriques incluent:
 

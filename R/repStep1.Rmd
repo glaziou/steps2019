@@ -1,5 +1,6 @@
 --- 
 title: "Enquête STEP 2019, Polynésie Française"
+subtitle: "Step 1, Questionnaire"
 output:  
   html_document: 
     mode: selfcontained
@@ -34,8 +35,6 @@ theme_gtsummary_language('fr')
 theme_gtsummary_journal('lancet')
 
 ``` 
-
-# Step 1, Questionnaire 
 
 ## 1.1 Tabac 
 
