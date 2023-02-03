@@ -308,13 +308,6 @@ dim(tmp2)
 steps <- copy(tmp2)
 rm(tmp, tmp2)
 
-# add calculated variables
-steps[!is.na(waist), bigbelly := 0]
-steps[waist >= 88 & sex=='F', bigbelly := 1]
-steps[waist >= 102 & sex=='M', bigbelly := 1]
-steps[!is.na(glycemie), diabete := 0]
-steps[glycemie > 110, diabete := 1]
-
 
 # merge step3 with steps
 #
@@ -356,6 +349,44 @@ steps <- copy(tmp)
 
 # urines done in only one geo stratum, no weighting possible
 steps[, sum(!is.na(creat)), by=gstratum]
+
+
+# add calculated variables
+steps[!is.na(waist), bigbelly := 0]
+steps[waist >= 88 & sex=='F', bigbelly := 1]
+steps[waist >= 102 & sex=='M', bigbelly := 1]
+steps[!is.na(glycemie), diabete := 0]
+steps[glycemie > 110, diabete := 1]
+steps[sex == 'M', salt := 23.51 + 0.45*sodium - 3.09*creat + 4.16*bmi + 0.22*age]
+steps[sex == 'F', salt := 3.74 + 0.33*sodium - 2.44*creat + 2.42*bmi + 2.34*age - 0.03*age^2]
+steps[!is.na(salt), normal.salt := 0]
+steps[salt > 2 & salt < 5, normal.salt := 1]
+
+
+# simplify varnames
+setnames(steps, names(steps), gsub(':','.',names(steps)))
+setnames(steps, names(steps), gsub('step1.','',names(steps)))
+setnames(steps, names(steps), gsub('_activity','',names(steps)))
+setnames(steps, names(steps), gsub('.Quality_of_','',names(steps)))
+setnames(steps, names(steps), gsub('Quality_of_','',names(steps)))
+setnames(steps, names(steps), gsub('_use','',names(steps)))
+setnames(steps, names(steps), gsub('-Consommation_de_','',names(steps)))
+setnames(steps, names(steps), gsub('_consumption','',names(steps)))
+setnames(steps, names(steps), gsub('_coordinates-geopoint','',names(steps)))
+setnames(steps, names(steps), gsub('_history_of_','',names(steps)))
+setnames(steps, names(steps), gsub('raised_total_','',names(steps)))
+setnames(steps, names(steps), gsub('_disease','',names(steps)))
+setnames(steps, names(steps), gsub('lifestyle_advice-','',names(steps)))
+setnames(steps, names(steps), gsub('_of','',names(steps)))
+setnames(steps, names(steps), gsub('_h20','',names(steps)))
+setnames(steps, names(steps), gsub('history','hx',names(steps)))
+setnames(steps, names(steps), gsub('cholesterol','chol',names(steps)))
+setnames(steps, names(steps), gsub('.screening','',names(steps)))
+setnames(steps, names(steps), gsub('.vegetqables_servings','',names(steps)))
+setnames(steps, names(steps), gsub('.control','',names(steps)))
+setnames(steps, names(steps), gsub('grp','',names(steps)))
+setnames(steps, names(steps), gsub('T1.T1','T1',names(steps)))
+
 
 
 

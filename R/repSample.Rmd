@@ -38,6 +38,12 @@ theme_gtsummary_journal('lancet')
 
 Au total, `r dim(steps)[1]` foyers ont été échantillonnés, une personne par foyer étant éligible pour participer à l'enquête. Parmi ces personnes, `r sum(steps$consent==1)` ont fourni leur consentement à participer, dont `r sum(steps$consent==1 & steps$enroll==0)` qui n'étaient pas éligibles (âge supérieur à 69 ans). 
 
+L'enquête comprends 3 étapes:
+
+* Etape 1: l'administration d'un questionnaire (n = `r sum(steps$consent==1)`)
+* Etape 2: la prise de mesures de poids, taille, et tension artérielle (n = `r sum(!is.na(steps$obese))`)
+* Etape 3: une mesure de la glycémie à jeun (n = `r sum(!is.na(steps$glycemie))`), ainsi que du sodium et créatinine urinaires réalisées dans un sous-échantillon d'une strate géographique (n = `r sum(!is.na(steps$creat))`)
+
 Le tableau 1 montre la distribution des `r sum(steps$enroll==0)` personnes manquantes (échantillonnées mais non enrollées dans l'étude) ainsi que leur pourcentage du total par archipel et par commune.
 
 

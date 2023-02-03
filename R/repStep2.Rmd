@@ -1,6 +1,5 @@
 --- 
 title: "Enquête STEP 2019, Polynésie Française"
-subtitle: "Steps 2 and 3, mesures anthropométriques et biologiques"
 output:  
   html_document: 
     mode: selfcontained
@@ -40,6 +39,8 @@ theme_gtsummary_journal('jama')
 labelled::var_label(steps$bmigr) <- "Corpulence [IMC]"
 
 ``` 
+
+# Steps 2 et 3, mesures anthropométriques et biologiques
 
 Les mesures anthropométriques incluent:
 
@@ -199,22 +200,82 @@ survey::svydesign(id = ~ uid,
 
 
 
-### Tableau 2.1.6 Prévalence du surpoids
+### Tableau 2.1.6a Prévalence du surpoids
 
-```{r tab_2_1_6}
-survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
-                  strata = ~gstratum + agegr,
-                  data = steps[enroll == 1 &
-                                 !is.na(bmigr), .(uid,
-                                                  w2,
-                                                  gstratum,
-                                                  agegr,
-                                                  bmigr,
-                                                  Surpoids)]) |>
+```{r tab_2_1_6a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w2,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr), .(uid,
+                                  w2,
+                                  gstratum,
+                                  agegr,
+                                  bmigr,
+                                  overweight,
+                                  sexe,
+                                  Surpoids)]
+) 
 
-  tbl_svysummary(include = c(Surpoids),
-                 statistic = list(all_categorical() ~ "{p}")) |>
+tbl_svysummary(d,
+               include = c(Surpoids),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels()
+
+```
+
+### Tableau 2.1.6b Prévalence du surpoids par âge et sexe
+
+```{r tab_2_1_6b}
+tab <- svyby(~overweight, ~agegr+sexe, d, svymean, vartype=c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age','Sexe','Surpoids','lo','hi')
+tab$gros <- paste0(tab$Surpoids, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Surpoids (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[,c(1:2,6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 2.1.7a Prévalence de l'obésité
+
+```{r tab_2_1_7a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w2,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr), .(uid,
+                                  w2,
+                                  gstratum,
+                                  agegr,
+                                  bmigr,
+                                  sexe,
+                                  obese,
+                                  Obese)]
+)
+tbl_svysummary(
+  d,
+  include = c(Obese),
+  label = list(Obese ~ "Obésité"),
+  statistic = list(all_categorical() ~ "{p}")
+) |>
   modify_header(label ~ "") |>
   add_ci(
     pattern = "{stat} ({ci})",
@@ -226,31 +287,24 @@ survey::svydesign(id = ~ uid,
 ```
 
 
+### Tableau 2.1.7b Prévalence de l'obésité par âge et sexe
 
-### Tableau 2.1.7 Prévalence de l'obésité
+```{r tab_2_1_7b}
+tab <- svyby( ~ obese, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Obésité (IC95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
 
-```{r tab_2_1_7}
-survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
-                  strata = ~gstratum + agegr,
-                  data = steps[enroll == 1 &
-                                 !is.na(bmigr), .(uid,
-                                                  w2,
-                                                  gstratum,
-                                                  agegr,
-                                                  bmigr,
-                                                  Obese)]) |>
-
-  tbl_svysummary(include = c(Obese),
-                 label = list(Obese ~ "Obésité"),
-                 statistic = list(all_categorical() ~ "{p}")) |>
-  modify_header(label ~ "") |>
-  add_ci(
-    pattern = "{stat} ({ci})",
-    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
-  )  |>
-  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
-  bold_labels()
 
 ```
 
@@ -403,21 +457,25 @@ tbl_stack(tbls = list(t1, t2))
 
 ## 2.2 Hypertension artérielle
 
-### Tableau 2.2.1 Prévalence de l'hypertension artérielle (HTA)
-```{r tab_2_2_1}
-survey::svydesign(id = ~ uid,
-                  weights = ~ w3,
-                  strata = ~gstratum + agegr,
-                  data = steps[enroll == 1 &
-                                 !is.na(bmigr), .(uid,
-                                                  w3,
-                                                  gstratum,
-                                                  agegr,
-                                                  bmigr,
-                                                  HTA)]) |>
+### Tableau 2.2.1a Prévalence de l'hypertension artérielle (HTA)
+```{r tab_2_2_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w2,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(hta), .(uid,
+                                  w2,
+                                  gstratum,
+                                  agegr,
+                                  sexe,
+                                  hta,
+                                  HTA)]
+)
 
-  tbl_svysummary(include = c(HTA),
-                 statistic = list(all_categorical() ~ "{p}")) |>
+tbl_svysummary(d,
+               include = c(HTA),
+               statistic = list(all_categorical() ~ "{p}")) |>
   modify_header(label ~ "") |>
   add_ci(
     pattern = "{stat} ({ci})",
@@ -428,17 +486,36 @@ survey::svydesign(id = ~ uid,
 
 ```
 
+### Tableau 2.2.1b Prévalence de l'hypertension artérielle par âge et sexe
+
+```{r tab_2_2_1b}
+tab <- svyby( ~ hta, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "HTA (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
 ### Tableau 2.2.2 Facteurs de risque d'HTA (analyse uni- et multivariée, ajustées pour les effets d'échantillonnage)
 
 ```{r tab_2_2_2}
 d <- survey::svydesign(id = ~ uid,
-                  weights = ~ w3,
+                  weights = ~ w2,
                   strata = ~gstratum + Age,
                   data = steps[enroll == 1 &
                                  !is.na(obese), .(uid,
-                                                  w3,
+                                                  w2,
                                                   gstratum,
                                                   sexe,
                                                   Age = agegr,
@@ -494,21 +571,26 @@ tbl_merge(
 
 ## 2.3 Diabète
 
-### Tableau 2.3.1 Prévalence du diabète
-```{r tab_2_3_1}
-survey::svydesign(id = ~ uid,
-                  weights = ~ w3,
-                  strata = ~gstratum + agegr,
-                  data = steps[enroll == 1 &
-                                 !is.na(diabete), .(uid,
-                                                  w3,
-                                                  gstratum,
-                                                  agegr,
-                                                  bmigr,
-                                                  Diabete)]) |>
+### Tableau 2.3.1a Prévalence du diabète
+```{r tab_2_3_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w3,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(diabete), .(uid,
+                                    w3,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    diabete,
+                                    Diabete)]
+)
 
-  tbl_svysummary(include = c(Diabete),
-                 statistic = list(all_categorical() ~ "{p}")) |>
+tbl_svysummary(d,
+               include = c(Diabete),
+               statistic = list(all_categorical() ~ "{p}")) |>
   modify_header(label ~ "") |>
   add_ci(
     pattern = "{stat} ({ci})",
@@ -516,6 +598,24 @@ survey::svydesign(id = ~ uid,
   )  |>
   modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
   bold_labels()
+```
+
+### Tableau 2.3.1b Prévalence du diabète par âge et sexe
+```{r tab_2_3_1b}
+tab <- svyby( ~ diabete, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Diabète (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
 
 ```
 

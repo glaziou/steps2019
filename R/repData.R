@@ -23,6 +23,15 @@ library(flextable)
 
 load(here('data/steps.Rdata')) # loads latest pre-processed data
 
+
+# utility functions
+# recode 1=yes 2=no into 1=yes 0=no
+yesno <- function(x){
+  x[x==2] <- 0
+  return(x)
+}
+
+
 steps[enroll == 1, inclus := 'Inclus']
 steps[enroll == 0, inclus := 'Exclus']
 
@@ -80,4 +89,4 @@ steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 # none were missed in Makemo, Raivavae, Tubuai
 
 # save
-save(steps, a1, a2, file = here('data/report.Rdata'))
+save(yesno, steps, a1, a2, file = here('data/report.Rdata'))
