@@ -89,8 +89,131 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 ```
 
-### Tableau 1.1.2a Ancien fumeurs de produits à base de tabac (ayant cessé de fumer)
+### Tableau 1.1.2a Fumeurs quotidiens 
 ```{r tab_1_1_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(tobacco.T2), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    t2 = yesno(tobacco.T2),
+                                    T2 = factor(yesno(tobacco.T2), levels=0:1, labels=c("Non","Oui")))]
+)
+
+tbl_svysummary(d,
+               include = c(T2),
+               label = list(T2 ~ "Fumeur quotidien"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels()
+
+```
+### Tableau 1.1.2b Fumeurs quotidiens, par âge et sexe
+```{r tab_1_1_2b}
+tab <- svyby( ~ t2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Fumeur quotidien (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.1.3a Age de la première cigarette 
+```{r tab_1_1_3a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(tobacco.T3) & tobacco.T3!=77, .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    t3 = factor(as.integer(tobacco.T2 >=15 | tobacco.T3 < 20), 
+                                                levels=0:1, labels=c('Non','Oui')),
+                                    tobacco.T3)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(tobacco.T3, t3),
+  label = list(
+    tobacco.T3 ~ "Age de le première cigarette",
+    t3 ~ "Première cigarette entre 15 et 20 ans"),
+  statistic = list(tobacco.T3 ~ "{mean}", 
+                   t3 ~ "{p}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne/Pourcentage (IC 95%)**") |>
+  bold_labels()
+
+```
+### Tableau 1.1.3b Age de la première cigarette, par âge et sexe
+```{r tab_1_1_3b}
+tab <- svyby( ~ tobacco.T3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "1ère cigarette (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+### Tableau 1.1.4 Nombre de cigarettes industrielles par jour (T5a)
+
+
+### Tableau 1.1.5 Nombre de cigarettes industrielles par semaine (T5aw)
+
+
+### Tableau 1.1.6 Nombre de cigarettes roulées par jour (T5b)
+
+
+### Tableau 1.1.7 Nombre de cigarettes roulées par semaine (T5bw)
+
+
+### Tableau 1.1.8 Essayé d'arrêter de fumer lors des 12 derniers mois (T6)
+
+
+### Tableau 1.1.9 Une professionnel conseille d'arrêter de fumer lors des 12 derniers mois (T6)
+
+
+
+
+
+### Tableau 1.1.10a Ancien fumeurs de produits à base de tabac (ayant cessé de fumer)
+```{r tab_1_1_10a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -120,8 +243,8 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.1.2b Ancien fumeurs, par âge et sexe
-```{r tab_1_1_2b}
+### Tableau 1.1.10b Ancien fumeurs, par âge et sexe
+```{r tab_1_1_10b}
 tab <- svyby( ~ t8, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
 names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
@@ -140,10 +263,90 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
+### Tableau 1.1.11a Ancien fumeurs quotidiens de produits à base de tabac (ayant cessé de fumer)
+```{r tab_1_1_11a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & !is.na(tobacco.T9), .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    t9 = yesno(tobacco.T9),
+    T9 = factor(
+      yesno(tobacco.T9),
+      levels = 0:1,
+      labels = c("Non", "Oui")
+    )
+  )]
+)
 
-## 1.2 Alcool 
+tbl_svysummary(d,
+               include = c(T9),
+               label = list(T9 ~ "Ancien fumeur quotidien"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels()
+
+```
+
+### Tableau 1.1.11b Ancien fumeurs quotidiens, par âge et sexe
+```{r tab_1_1_11b}
+tab <- svyby( ~ t9, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Ancien fumeur quotidien (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.1.12 Quelqu'un a fumé au domicile lors des 30 derniers jours (T17)
 
 
 
-## 1.3 Nutrition
+### Tableau 1.1.13 Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours (T18)
+
+
+
+
+## 1.2 Pakalolo
+
+
+
+## 1.3 Alcool 
+
+
+
+## 1.4 Nutrition
+
+
+
+## 1.5 Activité physique
+
+
+
+## 1.6 Qualité de vie
+
+
+
+## 1.7 Antécédents
 
