@@ -22,7 +22,7 @@ library(here)
 library(rmarkdown)
 
 
-# load datasets
+# load datasets and utility functions
 source(here('R/repData.R'))
 
 
@@ -41,7 +41,7 @@ rmarkdown::render(
   output_file = 'step1.html'
 )
 
-# step 2, physical and biological measures
+# steps 2-3, physical and biological measures
 rmarkdown::render(
   here('R/repStep2.Rmd'),
   output_dir = here('html'),

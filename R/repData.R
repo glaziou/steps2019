@@ -31,6 +31,38 @@ yesno <- function(x){
   return(x)
 }
 
+# frequency codes (2 sets)
+freq4 <- function(x) {
+  x <- factor(x,
+              levels = 1:4,
+              labels = rev(
+                c(
+                  "Jamais",
+                  "Parfois",
+                  "Souvent",
+                  "Toujours"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+freq5 <- function(x) {
+  x <- factor(x,
+              levels = 5:1,
+              labels = rev(
+                c(
+                  "5-7 jours par semaine",
+                  "2-4 jours par semaine",
+                  "1 jour par semaine",
+                  "1-3 jours par mois",
+                  "Moins d'une fois par mois"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
 
 steps[enroll == 1, inclus := 'Inclus']
 steps[enroll == 0, inclus := 'Exclus']
@@ -89,4 +121,6 @@ steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 # none were missed in Makemo, Raivavae, Tubuai
 
 # save
-save(yesno, steps, a1, a2, file = here('data/report.Rdata'))
+save(yesno, freq4, freq5, steps, a1, a2, file = here('data/report.Rdata'))
+
+

@@ -386,7 +386,23 @@ setnames(steps, names(steps), gsub('.vegetqables_servings','',names(steps)))
 setnames(steps, names(steps), gsub('.control','',names(steps)))
 setnames(steps, names(steps), gsub('grp','',names(steps)))
 setnames(steps, names(steps), gsub('T1.T1','T1',names(steps)))
+setnames(steps, names(steps), gsub('Consommation_de_pakalolo','paka',names(steps)))
+setnames(steps, names(steps), gsub('smok_paka','paka',names(steps)))
 
+
+
+# missing values
+steps[tobacco.T5a==77, tobacco.T5a := NA]
+steps[tobacco.T5aw==777, tobacco.T5a := NA]
+steps[tobacco.T5b==77, tobacco.T5b := NA]
+steps[tobacco.T5bw %in% c(77,777), tobacco.T5bw := NA]
+
+steps[paka.X2 %in% c(77, 88), paka.X2 := NA]
+steps[paka.X3 %in% c(77, 88), paka.X3 := NA]
+steps[paka.X4 %in% c(77, 88), paka.X4 := NA]
+steps[paka.X5 %in% c(77, 88), paka.X5 := NA]
+steps[paka.X6 %in% c(77, 88, 99), paka.X6 := NA]
+steps[paka.X7 %in% c(77, 88), paka.X7 := NA]
 
 
 

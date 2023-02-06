@@ -66,7 +66,8 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
 
 ```
 
@@ -116,7 +117,8 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
 
 ```
 ### Tableau 1.1.2b Fumeurs quotidiens, par âge et sexe
@@ -145,7 +147,7 @@ d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
   strata = ~ gstratum + agegr,
-  data = steps[enroll == 1 &
+  data = steps[enroll == 1 & tobacco.T2==1 &
                  !is.na(tobacco.T3) & tobacco.T3!=77, .(uid,
                                     w1,
                                     gstratum,
@@ -169,7 +171,8 @@ tbl_svysummary(
   modify_header(label ~ "") |>
   add_ci(pattern = "{stat} ({ci})") |>
   modify_header(stat_0 = "**Moyenne/Pourcentage (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
 
 ```
 ### Tableau 1.1.3b Age de la première cigarette, par âge et sexe
@@ -191,23 +194,315 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 ```
 
-### Tableau 1.1.4 Nombre de cigarettes industrielles par jour (T5a)
+### Tableau 1.1.4a Nombre de cigarettes industrielles fumées par jour (T5a)
+```{r tab_1_1_4a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 tobacco.T5a>0, .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    tobacco.T5a)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(tobacco.T5a),
+  label = list(
+    tobacco.T5a ~ "Nombre de cigarettes industrielles fumées par jour"),
+    statistic = list(tobacco.T5a ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.1.4b Nombre de cigarettes industrielles fumées par jour, par âge et sexe
+```{r tab_1_1_4b}
+tab <- svyby( ~ tobacco.T5a, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de cigarette médian"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+### Tableau 1.1.5a Nombre de cigarettes industrielles fumées par semaine (T5aw)
+```{r tab_1_1_5a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 tobacco.T5aw>0, .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    tobacco.T5aw)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(tobacco.T5aw),
+  label = list(
+    tobacco.T5aw ~ "Nombre de cigarettes industrielles fumées par semaine"),
+    statistic = list(tobacco.T5aw ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.1.5b Nombre de cigarettes industrielles fumées par semaine, par âge et sexe
+```{r tab_1_1_5b}
+tab <- svyby( ~ tobacco.T5aw, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$lo[tab$lo<0] <- 0 # avoid negative values in low bounds
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de cigarette médian"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
-### Tableau 1.1.5 Nombre de cigarettes industrielles par semaine (T5aw)
+### Tableau 1.1.6a Nombre de cigarettes roulées par jour (T5b)
+```{r tab_1_1_6a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 tobacco.T5b>0, .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    tobacco.T5b)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(tobacco.T5b),
+  label = list(
+    tobacco.T5b ~ "Nombre de cigarettes industrielles fumées par jour"),
+    statistic = list(tobacco.T5b ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.1.6b Nombre de cigarettes industrielles fumées par jour, par âge et sexe
+```{r tab_1_1_6b}
+tab <- svyby( ~ tobacco.T5b, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de cigarettes moyen (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
-### Tableau 1.1.6 Nombre de cigarettes roulées par jour (T5b)
+### Tableau 1.1.7a Nombre de cigarettes roulées par semaine (T5bw)
+```{r tab_1_1_7a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 tobacco.T5bw>0, .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    tobacco.T5bw)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(tobacco.T5bw),
+  label = list(
+    tobacco.T5bw ~ "Nombre de cigarettes industrielles fumées par semaine"
+  ),
+  type = list(tobacco.T5bw ~ 'continuous'),
+  statistic = list(tobacco.T5bw ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.1.7b Nombre de cigarettes industrielles fumées par semaine, par âge et sexe
+```{r tab_1_1_7b}
+tab <- svyby( ~ tobacco.T5bw, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$lo[tab$lo<0] <- 0 # avoid negative values in low bounds
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de cigarette (IC95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
-### Tableau 1.1.7 Nombre de cigarettes roulées par semaine (T5bw)
 
 
-### Tableau 1.1.8 Essayé d'arrêter de fumer lors des 12 derniers mois (T6)
+### Tableau 1.1.8a Essayé d'arrêter de fumer lors des 12 derniers mois (T6)
+```{r tab_1_1_8a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 !is.na(tobacco.T6), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,                                    
+                                    t6 = yesno(tobacco.T6),
+                                    T6 = factor(yesno(tobacco.T6), levels=0:1, labels=c("Non","Oui")))]
+)
+
+tbl_svysummary(d,
+               include = c(T6),
+               label = list(T6 ~ "Essayé d'arrêter"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+### Tableau 1.1.8b Essayé d'arrêter de fumer lors des 12 derniers mois, par âge et sexe
+```{r tab_1_1_8b}
+tab <- svyby( ~ t6, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Essayé d'arrêter (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
-### Tableau 1.1.9 Une professionnel conseille d'arrêter de fumer lors des 12 derniers mois (T6)
+### Tableau 1.1.9a Un professionnel conseille d'arrêter de fumer lors des 12 derniers mois (T7)
+```{r tab_1_1_9a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 !is.na(tobacco.T7), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,                                    
+                                    t7 = yesno(tobacco.T7),
+                                    T7 = factor(yesno(tobacco.T7), levels=0:1, labels=c("Non","Oui")))]
+)
 
+tbl_svysummary(d,
+               include = c(T7),
+               label = list(T7 ~ "Conseil d'arrêter"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+### Tableau 1.1.9b Un professionnel conseille d'arrêter de fumer lors des 12 derniers mois, par âge et sexe
+```{r tab_1_1_9b}
+tab <- svyby( ~ t7, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Conseil d'arrêter (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
 
@@ -239,7 +534,8 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
 
 ```
 
@@ -295,7 +591,8 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
 
 ```
 
@@ -319,16 +616,493 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tableau 1.1.12 Quelqu'un a fumé au domicile lors des 30 derniers jours (T17)
+### Tableau 1.1.12a Quelqu'un a fumé au domicile lors des 30 derniers jours (T17)
+```{r tab_1_1_12a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & 
+                 !is.na(tobacco.T17), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,                                    
+                                    t17 = yesno(tobacco.T17),
+                                    T17 = factor(yesno(tobacco.T17), levels=0:1, labels=c("Non","Oui")))]
+)
+
+tbl_svysummary(d,
+               include = c(T17),
+               label = list(T17 ~ "Fumé au domicile"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+### Tableau 1.1.12b Quelqu'un a fumé au domicile lors des 30 derniers jours, par âge et sexe
+```{r tab_1_1_12b}
+tab <- svyby( ~ t17, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Fumé au domicile (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
 
 
+### Tableau 1.1.13a Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours (T18)
+```{r tab_1_1_13a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & 
+                 tobacco.T18 %in% 1:2, .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,                                    
+                                    t18 = yesno(tobacco.T18),
+                                    T18 = factor(yesno(tobacco.T18), levels=0:1, labels=c("Non","Oui")))]
+)
 
-### Tableau 1.1.13 Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours (T18)
+tbl_svysummary(d,
+               include = c(T18),
+               label = list(T18 ~ "Fumé au travail"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+### Tableau 1.1.13b Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours, par âge et sexe
+```{r tab_1_1_13b}
+tab <- svyby( ~ t18, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Fumé au travail (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
 
 
 
 
 ## 1.2 Pakalolo
+
+### Tableau 1.2.1a Fumeur de pakalolo 
+```{r tab_1_2_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(paka.X2), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    x2 = yesno(paka.X2),
+                                    X2 = factor(yesno(paka.X2), levels=0:1, labels=c("Non","Oui")))]
+)
+
+tbl_svysummary(d,
+               include = c(X2),
+               label = list(X2 ~ "Fumeur"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.2.1b Fumeurs, par âge et sexe
+```{r tab_1_2_1b}
+tab <- svyby( ~ x2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Fumeur (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.2.2a Age de la première cigarette de pakalolo (X3)
+```{r tab_1_2_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & paka.X2 == 1 &
+                 !is.na(paka.X3), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    paka.X3)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(paka.X3),
+  label = list(
+    paka.X3 ~ "Age de le première cigarette"),
+  statistic = list(paka.X3 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+### Tableau 1.2.2b Age de la première cigarette, par âge et sexe
+```{r tab_1_2_2b}
+tab <- svyby( ~ paka.X3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "1ère cigarette (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.2.3a Fumeur de pakalolo au cours des 12 derniers mois (X4)
+```{r tab_1_2_3a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(paka.X4), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    x4 = yesno(paka.X4),
+                                    X4 = factor(yesno(paka.X4), levels=0:1, labels=c("Non","Oui")))]
+)
+
+tbl_svysummary(d,
+               include = c(X4),
+               label = list(X4 ~ "Fumeur"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.2.3b Fumeurs, par âge et sexe
+```{r tab_1_2_3b}
+tab <- svyby( ~ x4, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Fumeur (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+
+### Tableau 1.2.4a Fumeur de pakalolo au cours des 12 derniers mois : fréquence (X5)
+```{r tab_1_2_4a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(paka.X5), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    X5 = freq5(paka.X5))]
+)
+
+tbl_svysummary(d,
+               include = c(X5),
+               label = list(X5 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.2.4b Fréquence, par sexe
+```{r tab_1_2_4b}
+tbl_svysummary(d,
+               include = c(X5, sexe),
+               label = list(X5 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+### Tableau 1.2.4c Fréquence, par âge
+```{r tab_1_2_4c}
+tbl_svysummary(d,
+               include = c(X5, agegr),
+               label = list(X5 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = agegr) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Groupe d'âge**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+### Tableau 1.2.4d Fréquence, par âge et sexe
+```{r tab_1_2_4d}
+tbl_svysummary(d,
+               include = c(X5, agegr, sexe),
+               label = list(X5 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = agegr) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Groupe d'âge**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+### Tableau 1.2.5a Fumeur de pakalolo au moins une fois par semaine : âge de début (X6)
+```{r tab_1_2_5a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & tobacco.T2==1 &
+                 !is.na(paka.X6), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    paka.X6)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(paka.X6),
+  label = list(paka.X6 ~ "Age de début du pakalolo"),
+  statistic = list(paka.X6 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.2.5b Age de début, par âge et sexe
+```{r tab_1_2_5b}
+tab <- svyby( ~ paka.X6, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Age de début du pakalolo (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tablean 1.2.6 Fumeur de pakalolo et consommation d'alcool au même moment (X7)
+```{r tab_1_2_6a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(paka.X7), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    X7 = freq4(paka.X7))]
+)
+
+tbl_svysummary(d,
+               include = c(X7),
+               label = list(X7 ~ "Pakalolo et alcool"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.2.6b Fréquence, par sexe
+```{r tab_1_2_6b}
+tbl_svysummary(d,
+               include = c(X7, sexe),
+               label = list(X7 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+### Tableau 1.2.6c Fréquence, par âge
+```{r tab_1_2_6c}
+tbl_svysummary(d,
+               include = c(X7, agegr),
+               label = list(X7 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = agegr) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Groupe d'âge**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+### Tableau 1.2.6d Fréquence, par âge et sexe
+```{r tab_1_2_6d}
+tbl_svysummary(d,
+               include = c(X7, agegr, sexe),
+               label = list(X7 ~ "Fréquence (12 derniers mois)"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = agegr) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Groupe d'âge**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
 
 
 
