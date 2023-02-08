@@ -404,6 +404,14 @@ steps[paka.X5 %in% c(77, 88), paka.X5 := NA]
 steps[paka.X6 %in% c(77, 88, 99), paka.X6 := NA]
 steps[paka.X7 %in% c(77, 88), paka.X7 := NA]
 
+steps[alcweek.A10a %in% c(77), alcweek.A10a := NA]
+steps[alcweek.A10b %in% c(77), alcweek.A10b := NA]
+steps[alcweek.A10c %in% c(77), alcweek.A10c := NA]
+steps[alcweek.A10d %in% c(77), alcweek.A10d := NA]
+steps[alcweek.A10e %in% c(77), alcweek.A10e := NA]
+steps[alcweek.A10f %in% c(77), alcweek.A10f := NA]
+steps[alcweek.A10g %in% c(77), alcweek.A10g := NA]
+
 
 
 #' save

@@ -28,23 +28,23 @@ source(here('R/repData.R'))
 
 # generate html pages for each step
 # sample description
-rmarkdown::render(
+system.time(rmarkdown::render(
   here('R/repSample.Rmd'),
   output_dir = here('html'),
   output_file = 'samplingDescription.html'
-)
+))
 
 # step 1, questionnaire
-rmarkdown::render(
+system.time(rmarkdown::render(
   here('R/repStep1.Rmd'),
   output_dir = here('html'),
   output_file = 'step1.html'
-)
+))
 
 # steps 2-3, physical and biological measures
-rmarkdown::render(
+system.time(rmarkdown::render(
   here('R/repStep2.Rmd'),
   output_dir = here('html'),
   output_file = 'step2.html'
-)
+))
 

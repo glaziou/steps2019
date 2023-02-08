@@ -63,6 +63,41 @@ freq5 <- function(x) {
   return(x)
 }
 
+freq5b <- function(x) {
+  x <- factor(x,
+              levels = 5:1,
+              labels = rev(
+                c(
+                  "Plus d'une fois par mois",
+                  "Chaque mois",
+                  "Plusieurs fois mais moins d'une fois par mois",
+                  "1-2 fois",
+                  "Non"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+
+freq7 <- function(x) {
+  x <- factor(x,
+              levels = 7:1,
+              labels = rev(
+                c(
+                  "Quotidiennement",
+                  "5-6 jours par semaine",
+                  "3-4 jours par semaine",
+                  "1-2 jours par semaine",
+                  "1-3 jours par mois",
+                  "Moins d'une fois par mois",
+                  "Jamais"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
 
 steps[enroll == 1, inclus := 'Inclus']
 steps[enroll == 0, inclus := 'Exclus']
@@ -121,6 +156,14 @@ steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 # none were missed in Makemo, Raivavae, Tubuai
 
 # save
-save(yesno, freq4, freq5, steps, a1, a2, file = here('data/report.Rdata'))
+save(yesno,
+     freq4,
+     freq5,
+     freq5b,
+     freq7,
+     steps,
+     a1,
+     a2,
+     file = here('data/report.Rdata'))
 
 
