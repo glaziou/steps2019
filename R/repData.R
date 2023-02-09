@@ -63,6 +63,7 @@ freq5 <- function(x) {
   return(x)
 }
 
+
 freq5b <- function(x) {
   x <- factor(x,
               levels = 5:1,
@@ -78,6 +79,24 @@ freq5b <- function(x) {
               ordered = TRUE)
   return(x)
 }
+
+
+freq5c <- function(x) {
+  x <- factor(x,
+              levels = 1:5,
+              labels = rev(
+                c(
+                  "Jamais",
+                  "Rarement",
+                  "Parfois",
+                  "Souvent",
+                  "Toujours"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
 
 
 freq7 <- function(x) {
@@ -96,6 +115,15 @@ freq7 <- function(x) {
               ),
               ordered = TRUE)
   return(x)
+}
+
+# splits multichoice questions
+qcm <- function(x, value=1) {
+  x <- gsub(" ","", x)
+  y <- grepl(value, x)
+  y <- factor(y, labels=c('Non','Oui'))
+  y[x==''] <- NA
+  return(y)
 }
 
 
@@ -120,6 +148,14 @@ a2 <-
   a2[, .(enrolled = sum(N), pop = sum(pop)), by = .(archipel, sex, age =
                                                       agegr)]
 a2[, fraction := signif(enrolled * 100 / pop, 2)]  # sampling fraction
+
+
+# split QCMs into binary vars
+for (i in 1:8) {
+  steps[, paste0("diet.X8.", i) := qcm(diet.X8, i)]
+  steps[, paste0("diet.X9.", i) := qcm(diet.X9, i)]
+} 
+
 
 
 # update var values
@@ -160,7 +196,9 @@ save(yesno,
      freq4,
      freq5,
      freq5b,
+     freq5c,
      freq7,
+     qcm,
      steps,
      a1,
      a2,

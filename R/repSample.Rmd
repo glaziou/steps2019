@@ -109,7 +109,6 @@ flextable(a2[, .(
 ```
 
 
-
 ### Tableau 5. Caractères démographiques des participants
 
 ```{r tab_5}
@@ -122,6 +121,23 @@ tbl_summary(steps[enroll == 1, .(
 )], by = archipel) |>
   modify_header(label = "**Variable**") %>% # update the column header
   bold_labels() |> add_overall(last = TRUE) 
+
+```
+
+### Figure 1. Fraction d'échantillonnage par stratum géographique, sexe et âge 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results = "asis", dev = 'png', fig_1, fig.alt="Fractions d'échantillonnage"} 
+
+load(here('data/report.Rdata'))
+
+qplot(
+  fraction,
+  archipel,
+  colour = Sexe,
+  shape = Age,
+  data = a2[, .(archipel, Age = age, Sexe = sex, fraction)],
+  size = I(5)
+) + theme_bw() + xlab("Fraction d'échantillonnage (%)") + ylab("Archipel")
 
 ```
 

@@ -1796,6 +1796,351 @@ tbl_svysummary(d,
 
 ## 1.4 Nutrition
 
+### Tableau 1.4.1a Consommation de fruits: nombre de jours par semaine
+
+```{r tab_1_4_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(diet.D1) & diet.D1 != 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          diet.D1)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(diet.D1),
+  label = list(diet.D1 ~ "Nombre de jours"),
+  type = list(diet.D1 ~ 'continuous'),
+  statistic = list(diet.D1 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.1b Nombre d'occasions, par âge et sexe
+
+```{r tab_1_4_1b}
+tab <- svyby( ~ diet.D1, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de jours (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.4.2a Consommation de fruits: nombre de portions par jour
+
+```{r tab_1_4_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(diet.fruits_serv.D2) & diet.fruits_serv.D2 != 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          diet.fruits_serv.D2)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(diet.fruits_serv.D2),
+  label = list(diet.fruits_serv.D2 ~ "Nombre de portions"),
+  type = list(diet.fruits_serv.D2 ~ 'continuous'),
+  statistic = list(diet.fruits_serv.D2 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.2b Nombre de portions, par âge et sexe
+
+```{r tab_1_4_2b}
+tab <- svyby( ~ diet.fruits_serv.D2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de portions (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+
+### Tableau 1.4.3 Raisons de ne pas consommer plus de fruits
+
+```{r tab_1_4_3}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    diet.X8.1,
+    diet.X8.2,
+    diet.X8.3,
+    diet.X8.4,
+    diet.X8.5,
+    diet.X8.6,
+    diet.X8.7,
+    diet.X8.8
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    diet.X8.1,
+    diet.X8.2,
+    diet.X8.3,
+    diet.X8.4,
+    diet.X8.5,
+    diet.X8.6,
+    diet.X8.7,
+    diet.X8.8
+  ),
+  label = list(
+    diet.X8.1 ~ "Consommation de fruits est suffisante",
+    diet.X8.2 ~ "Prix trop élevé",
+    diet.X8.3 ~ "Difficultés d'approvisionnement",
+    diet.X8.4 ~ "Préparation contraignante",
+    diet.X8.5 ~ "Présence de pesticides",
+    diet.X8.6 ~ "Absence d'arbres fruitiers",
+    diet.X8.7 ~ "N'aime pas les fruits",
+    diet.X8.8 ~ "Autre raison"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+### Tableau 1.4.4a Consommation de légumes: nombre de jours par semaine
+
+```{r tab_1_4_4a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 diet.D3 != 77, .(uid,
+                                  w1,
+                                  gstratum,
+                                  agegr,
+                                  bmigr,
+                                  sexe,
+                                  diet.D3)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(diet.D3),
+  label = list(diet.D3 ~ "Nombre de jours"),
+  type = list(diet.D3 ~ 'continuous'),
+  statistic = list(diet.D3 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.4b Nombre de jours, par âge et sexe
+
+```{r tab_1_4_4b}
+tab <- svyby( ~ diet.D3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de portions (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.4.5 Raisons de ne pas consommer plus de légumes
+
+```{r tab_1_4_5}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    diet.X9.1,
+    diet.X9.2,
+    diet.X9.3,
+    diet.X9.4,
+    diet.X9.5,
+    diet.X9.6,
+    diet.X9.7,
+    diet.X9.8
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    diet.X9.1,
+    diet.X9.2,
+    diet.X9.3,
+    diet.X9.4,
+    diet.X9.5,
+    diet.X9.6,
+    diet.X9.7,
+    diet.X9.8
+  ),
+  label = list(
+    diet.X9.1 ~ "Consommation de fruits est suffisante",
+    diet.X9.2 ~ "Prix trop élevé",
+    diet.X9.3 ~ "Difficultés d'approvisionnement",
+    diet.X9.4 ~ "Préparation contraignante",
+    diet.X9.5 ~ "Présence de pesticides",
+    diet.X9.6 ~ "Absence d'arbres fruitiers",
+    diet.X9.7 ~ "N'aime pas les fruits",
+    diet.X9.8 ~ "Autre raison"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+### Tableau 1.4.6a Consommation de légumes: nombre de portions par jour
+
+```{r tab_1_4_6a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(diet.vegetables_serv.D4) & diet.vegetables_serv.D4 != 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          diet.vegetables_serv.D4)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(diet.vegetables_serv.D4),
+  label = list(diet.vegetables_serv.D4 ~ "Nombre de portions"),
+  type = list(diet.vegetables_serv.D4 ~ 'continuous'),
+  statistic = list(diet.vegetables_serv.D4 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.6b Nombre de portions, par âge et sexe
+
+```{r tab_1_4_6b}
+tab <- svyby( ~ diet.vegetables_serv.D4, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de portions (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+
+
 
 
 ## 1.5 Activité physique

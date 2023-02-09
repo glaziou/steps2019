@@ -388,7 +388,7 @@ setnames(steps, names(steps), gsub('grp','',names(steps)))
 setnames(steps, names(steps), gsub('T1.T1','T1',names(steps)))
 setnames(steps, names(steps), gsub('Consommation_de_pakalolo','paka',names(steps)))
 setnames(steps, names(steps), gsub('smok_paka','paka',names(steps)))
-
+setnames(steps, names(steps), gsub('dietary_salt','salt',names(steps)))
 
 
 # missing values
