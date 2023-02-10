@@ -158,7 +158,7 @@ dprop <- function(ev1, sd1, ev2, sd2, nsim = 1e5) {
   out <-
     c(
       mean.diff = mean(d),
-      lo = quantile(d, 0.05),
+      lo = quantile(d, 0.025),
       hi = quantile(d, 0.975)
     )
   return(out)
