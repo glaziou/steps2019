@@ -948,23 +948,6 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.4d Fréquence, par âge et sexe
-```{r tab_1_2_4d}
-tbl_svysummary(d,
-               include = c(X5, agegr, sexe),
-               label = list(X5 ~ "Fréquence (12 derniers mois)"),
-               statistic = list(all_categorical() ~ "{p}"),
-               by = agegr) |>
-  modify_header(label ~ "") |>
-  add_ci(
-    pattern = "{stat} ({ci})",
-    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
-  )  |>
-  modify_header(label ~ "**Groupe d'âge**",
-                all_stat_cols() ~ "**{level} (IC 95%)**") |>
-  bold_labels()
-
-```
 
 
 ### Tableau 1.2.5a Fumeur de pakalolo au moins une fois par semaine : âge de début (X6)
@@ -1513,13 +1496,13 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.7b Nombre d'occasions, par âge et sexe
+### Tableau 1.3.7b Nombre de verres, par âge et sexe
 ```{r tab_1_3_7b}
 tab <- svyby( ~ A7, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
 names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
 tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
-names(tab)[6] <- "Nombre d'occasions (IC 95%)"
+names(tab)[6] <- "Nombre de verres (IC 95%)"
 rownames(tab) <- NULL
 tab <- tab[, c(1:2, 6)]
 gt::gt(tab, groupname_col = 'Sexe') |> 

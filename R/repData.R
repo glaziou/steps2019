@@ -33,17 +33,15 @@ yesno <- function(x){
 
 # frequency codes (2 sets)
 freq4 <- function(x) {
-  x <- factor(x,
-              levels = 1:4,
-              labels = rev(
-                c(
-                  "Jamais",
-                  "Parfois",
-                  "Souvent",
-                  "Toujours"
-                )
-              ),
-              ordered = TRUE)
+  x <- factor(
+    x,
+    levels = 1:4,
+    labels = c("Jamais",
+               "Parfois",
+               "Souvent",
+               "Toujours"),
+    ordered = TRUE
+  )
   return(x)
 }
 
@@ -116,6 +114,57 @@ freq7 <- function(x) {
               ordered = TRUE)
   return(x)
 }
+
+
+# returns Beta shape and scale params using the method of moments
+get.beta <- function(ev, sd) {
+  #' @param ev expected value.
+  #' @param sd standard deviation.
+  #' @export
+  stopifnot(ev > 0 & ev < 1)
+  stopifnot(sd > 0)
+  
+  S = (ev * (1 - ev) / sd ^ 2) - 1
+  if (S < 0)
+    stop('Not distributed Beta: sd^2 >= ev*(1-ev)')
+  
+  a = S * ev
+  b = S * (1 - ev)
+  return(c(a = a, b = b))
+}
+
+
+# generate low and high bounds assuming Beta distribution
+lohi <- function(ev, sd) {
+  #' @param ev expected value.
+  #' @param sd standard deviation.
+  #' @export
+  stopifnot(ev > 0 & ev < 1)
+  stopifnot(sd > 0)
+  
+  par <- get.beta(ev, sd)
+  lo <- qbeta(0.025, par[1], par[2])
+  hi <- qbeta(0.975, par[1], par[2])
+  return(c(lo = lo, hi = hi))
+}
+
+# simulate quantiles of a difference in proportions
+dprop <- function(ev1, sd1, ev2, sd2, nsim = 1e5) {
+  par1 <- get.beta(ev1, sd1)
+  par2 <- get.beta(ev2, sd2)
+  s1 <- rbeta(nsim, par1[[1]], par1[[2]])
+  s2 <- rbeta(nsim, par2[[1]], par2[[2]])
+  d <- s2 - s1
+  out <-
+    c(
+      mean.diff = mean(d),
+      lo = quantile(d, 0.05),
+      hi = quantile(d, 0.975)
+    )
+  return(out)
+}
+
+
 
 # splits multichoice questions
 qcm <- function(x, value=1) {
@@ -198,6 +247,9 @@ save(yesno,
      freq5b,
      freq5c,
      freq7,
+     get.beta,
+     lohi,
+     dprop,
      qcm,
      steps,
      a1,
