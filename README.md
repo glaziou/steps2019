@@ -4,10 +4,11 @@
 
 ## Folders
 - csv: datasets with timestamp included in file names 
-- input: raw data and dictionaries
-- output: various output tables and figures
 - data: latest version datasets in R binary format
+- doc: documentation including survey questionnaire
+- input: raw data and dictionaries
 - html: report pages
+- output: various output tables and figures
 - R: R and R markdown scripts
 
 
@@ -23,6 +24,7 @@ In an R console, type:
 source('R/repMaster.R°)
 
 This script runs the following sequence:
-- preprocess data
+- preprocess raw data
+- creates and loads utility functions and cleaned report data
 - generate an html page describing the sample (in folder html)
 - generate 3 html pages for each of Step 1, 2 and 3
