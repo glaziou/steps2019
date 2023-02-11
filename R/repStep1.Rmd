@@ -2121,18 +2121,493 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
+### Tablean 1.4.7a Ajouter du sel ou sauce de soja en mangeant (avant ou pendant)
+
+```{r tab_1_4_7a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              D5 = freq5c(diet.salt.D5))]
+)
+
+tbl_svysummary(d,
+               include = c(D5),
+               missing = "no",
+               label = list(D5 ~ "Fréquence d'ajout de sel"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.7b Fréquence, par sexe
+```{r tab_1_4_7b}
+tbl_svysummary(d,
+               include = c(D5, sexe),
+               missing = "no",
+               label = list(D5 ~ "Fréquence d'ajout de sel"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+### Tablean 1.4.8a Ajouter du sel ou sauce de soja en faisant la cuisine
+
+```{r tab_1_4_8a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              D6 = freq5c(diet.salt.D6))]
+)
+
+tbl_svysummary(d,
+               include = c(D6),
+               missing = "no",
+               label = list(D6 ~ "Fréquence d'ajout de sel"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.8b Fréquence, par sexe
+```{r tab_1_4_8b}
+tbl_svysummary(d,
+               include = c(D6, sexe),
+               missing = "no",
+               label = list(D6 ~ "Fréquence d'ajout de sel"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.4.9a Manger des aliments riches en sel
+
+```{r tab_1_4_9a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              D7 = freq5c(diet.salt.D7))]
+)
+
+tbl_svysummary(d,
+               include = c(D7),
+               missing = "no",
+               label = list(D7 ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.9b Fréquence, par sexe
+```{r tab_1_4_9b}
+tbl_svysummary(d,
+               include = c(D7, sexe),
+               missing = "no",
+               label = list(D7 ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.4.10a Quantité de sel consommée
+
+```{r tab_1_4_10a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              D8 = freq5d(diet.salt.D8))]
+)
+
+tbl_svysummary(d,
+               include = c(D8),
+               missing = "no",
+               label = list(D8 ~ "Quantité de sel"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.4.10b Quantité de sel, par sexe
+```{r tab_1_4_10b}
+tbl_svysummary(d,
+               include = c(D8, sexe),
+               missing = "no",
+               label = list(D8 ~ "Quantité de sel"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+## 1.5 Hygiène alimentaire
+
+### Tableau 1.5.1 Attitudes alimentaires vis-à-vis du sel
+
+```{r tab_1_5_1}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    D10 = qcm(diet.D10, 1),
+    D11a = qcm(diet.salt.D11a, 1),
+    D11b = qcm(diet.salt.D11b, 1),
+    D11d = qcm(diet.salt.D11d, 1),
+    D11e = qcm(diet.salt.D11e, 1)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(D10, D11a, D11b, D11d, D11e),
+  label = list(
+    D10 ~ "Trop de sel est source de problèmes",
+    D11a ~ "Il faut réduire les plats cuisinés salés",
+    D11b ~ "Il faut vérifier la teneur en sel sur les étiquettes",
+    D11d ~ "Il faut utiliser des épices autre que le sel",
+    D11e ~ "Il faut éviter de manger hors du domicile"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+### Tablean 1.5.2a Fréquence de consommations de boissons sucrées
+
+```{r tab_1_5_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & diet.sugary_drinks.X10<6, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              X10 = freq5(diet.sugary_drinks.X10))]
+)
+
+tbl_svysummary(d,
+               include = c(X10),
+               missing = "no",
+               label = list(X10 ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.5.2b Fréquence, par sexe
+```{r tab_1_5_2b}
+tbl_svysummary(d,
+               include = c(X10, sexe),
+               missing = "no",
+               label = list(X10 ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tableau 1.5.3a Consommation de boissons sucrées: nombre de verres par jour
+
+```{r tab_1_5_3a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 diet.sugary_drinks.X11 < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          X11 = diet.sugary_drinks.X11)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(X11),
+  label = list(X11 ~ "Nombre de portions"),
+  type = list(X11 ~ 'continuous'),
+  statistic = list(X11 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.5.3b Nombre de verres, par âge et sexe
+
+```{r tab_1_5_3b}
+tab <- svyby( ~ X11, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de portions (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tablean 1.5.4a Moment de consommation de boissons sucrées
+
+```{r tab_1_5_4a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & diet.sugary_drinks.X10<4, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              X12 = freq3(diet.sugary_drinks.X12))]
+)
+
+tbl_svysummary(d,
+               include = c(X12),
+               missing = "no",
+               label = list(X12 ~ "Moment"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.5.4b Fréquence, par sexe
+```{r tab_1_5_4b}
+tbl_svysummary(d,
+               include = c(X12, sexe),
+               missing = "no",
+               label = list(X12 ~ "Moment"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.5.5a Fréquence de consommation de junk food
+
+```{r tab_1_5_5a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & diet.X13<6, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              X13 = freq5(diet.X13))]
+)
+
+tbl_svysummary(d,
+               include = c(X13),
+               missing = "no",
+               label = list(X13 ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.5.5b Fréquence, par sexe
+```{r tab_1_5_5b}
+tbl_svysummary(d,
+               include = c(X13, sexe),
+               missing = "no",
+               label = list(X13 ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
 
 
 
 
 
-## 1.5 Activité physique
 
 
 
-## 1.6 Qualité de vie
+## 1.6 Activité physique
 
 
 
-## 1.7 Antécédents
+## 1.7 Qualité de vie
+
+
+
+## 1.8 Antécédents
 

@@ -25,13 +25,28 @@ load(here('data/steps.Rdata')) # loads latest pre-processed data
 
 
 # utility functions
-# recode 1=yes 2=no into 1=yes 0=no
+# recode 1=yes 2=no into 1=yes 0=no, with all other values reset to missing
 yesno <- function(x){
   x[x==2] <- 0
+  x[x>1 | x<0] <- NA
   return(x)
 }
 
-# frequency codes (2 sets)
+# various frequency codes
+#
+freq3 <- function(x) {
+  x <- factor(x,
+              levels = 1:3,
+              labels = c(
+                  "Lors des repas",
+                  "Entre les repas",
+                  "Lors des repas et entre les repas"
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+
 freq4 <- function(x) {
   x <- factor(
     x,
@@ -89,6 +104,23 @@ freq5c <- function(x) {
                   "Parfois",
                   "Souvent",
                   "Toujours"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+
+freq5d <- function(x) {
+  x <- factor(x,
+              levels = 1:5,
+              labels = rev(
+                c(
+                  "Bien trop peu",
+                  "Trop peu",
+                  "Juste la quantité nécessaire",
+                  "Trop",
+                  "Beaucoup trop"
                 )
               ),
               ordered = TRUE)
@@ -176,6 +208,9 @@ qcm <- function(x, value=1) {
 }
 
 
+
+
+
 steps[enroll == 1, inclus := 'Inclus']
 steps[enroll == 0, inclus := 'Exclus']
 
@@ -242,10 +277,12 @@ steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 
 # save
 save(yesno,
+     freq3,
      freq4,
      freq5,
      freq5b,
      freq5c,
+     freq5d,
      freq7,
      get.beta,
      lohi,
