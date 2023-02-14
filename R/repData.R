@@ -47,6 +47,19 @@ freq3 <- function(x) {
 }
 
 
+freq3b <- function(x) {
+  x <- factor(x,
+              levels = 1:3,
+              labels = c(
+                "Oui, beaucoup limité",
+                "Oui, un peu limité",
+                "Non, pas du tout limité"
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+
 freq4 <- function(x) {
   x <- factor(
     x,
@@ -94,23 +107,6 @@ freq5b <- function(x) {
 }
 
 
-freq5c <- function(x) {
-  x <- factor(x,
-              levels = 1:5,
-              labels = rev(
-                c(
-                  "Jamais",
-                  "Rarement",
-                  "Parfois",
-                  "Souvent",
-                  "Toujours"
-                )
-              ),
-              ordered = TRUE)
-  return(x)
-}
-
-
 freq5d <- function(x) {
   x <- factor(x,
               levels = 1:5,
@@ -128,6 +124,52 @@ freq5d <- function(x) {
 }
 
 
+freq5e <- function(x) {
+  x <- factor(
+    x,
+    levels = 1:5,
+    labels = c("Excellente",
+               "Très bonne",
+               "Bonne",
+               "Médiocre",
+               "Mauvaise"),
+    ordered = TRUE
+  )
+  return(x)
+}
+
+freq5f <- function(x) {
+  x <- factor(x,
+              levels = 1:5,
+              labels = rev(
+                c(
+                  "Jamais",
+                  "Rarement",
+                  "Parfois",
+                  "La plupart du temps",
+                  "Toujours"
+                )
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+
+freq5g <- function(x) {
+  x <- factor(
+    x,
+    levels = 1:5,
+    labels = c(
+      "Pas du tout",
+      "Un petit peu",
+      "Moyennement",
+      "Beaucoup",
+      "Enormément"
+    ),
+    ordered = TRUE
+  )
+  return(x)
+}
 
 freq7 <- function(x) {
   x <- factor(x,
@@ -278,11 +320,15 @@ steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 # save
 save(yesno,
      freq3,
+     freq3b,
      freq4,
      freq5,
      freq5b,
      freq5c,
      freq5d,
+     freq5e,
+     freq5f,
+     freq5g,
      freq7,
      get.beta,
      lohi,

@@ -40,7 +40,7 @@ theme_gtsummary_journal('lancet')
 
 ## 1.1 Tabac 
 
-### Tableau 1.1.1a Fumeurs de produits à base de tabac 
+### Tableau 1.1.1a Fumeurs de produits à base de tabac (T1)
 ```{r tab_1_1_1a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -72,7 +72,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.1.1b Fumeurs, par âge et sexe
+### Tableau 1.1.1b Fumeurs, par âge et sexe (T1)
 ```{r tab_1_1_1b}
 tab <- svyby( ~ t1, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -91,7 +91,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 ```
 
-### Tableau 1.1.2a Fumeurs quotidiens 
+### Tableau 1.1.2a Fumeurs quotidiens (T2)
 ```{r tab_1_1_2a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -122,7 +122,7 @@ tbl_svysummary(d,
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.1.2b Fumeurs quotidiens, par âge et sexe
+### Tableau 1.1.2b Fumeurs quotidiens, par âge et sexe (T2)
 ```{r tab_1_1_2b}
 tab <- svyby( ~ t2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -142,7 +142,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tableau 1.1.3a Age de la première cigarette 
+### Tableau 1.1.3a Age de la première cigarette (T3)
 ```{r tab_1_1_3a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -176,7 +176,7 @@ tbl_svysummary(
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.1.3b Age de la première cigarette, par âge et sexe
+### Tableau 1.1.3b Age de la première cigarette, par âge et sexe (T3)
 ```{r tab_1_1_3b}
 tab <- svyby( ~ tobacco.T3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -226,7 +226,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.1.4b Nombre de cigarettes industrielles fumées par jour, par âge et sexe
+### Tableau 1.1.4b Nombre de cigarettes industrielles fumées par jour, par âge et sexe (T5a)
 ```{r tab_1_1_4b}
 tab <- svyby( ~ tobacco.T5a, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -276,7 +276,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.1.5b Nombre de cigarettes industrielles fumées par semaine, par âge et sexe
+### Tableau 1.1.5b Nombre de cigarettes industrielles fumées par semaine, par âge et sexe (T5aw)
 ```{r tab_1_1_5b}
 tab <- svyby( ~ tobacco.T5aw, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -328,7 +328,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.1.6b Nombre de cigarettes industrielles fumées par jour, par âge et sexe
+### Tableau 1.1.6b Nombre de cigarettes industrielles fumées par jour, par âge et sexe (T5b)
 ```{r tab_1_1_6b}
 tab <- svyby( ~ tobacco.T5b, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -381,7 +381,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.1.7b Nombre de cigarettes industrielles fumées par semaine, par âge et sexe
+### Tableau 1.1.7b Nombre de cigarettes industrielles fumées par semaine, par âge et sexe (T5bw)
 ```{r tab_1_1_7b}
 tab <- svyby( ~ tobacco.T5bw, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -435,7 +435,7 @@ tbl_svysummary(d,
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.1.8b Essayé d'arrêter de fumer lors des 12 derniers mois, par âge et sexe
+### Tableau 1.1.8b Essayé d'arrêter de fumer lors des 12 derniers mois, par âge et sexe (T6)
 ```{r tab_1_1_8b}
 tab <- svyby( ~ t6, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -486,7 +486,7 @@ tbl_svysummary(d,
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.1.9b Un professionnel conseille d'arrêter de fumer lors des 12 derniers mois, par âge et sexe
+### Tableau 1.1.9b Un professionnel conseille d'arrêter de fumer lors des 12 derniers mois, par âge et sexe (T7)
 ```{r tab_1_1_9b}
 tab <- svyby( ~ t7, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -508,7 +508,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.1.10a Ancien fumeurs de produits à base de tabac (ayant cessé de fumer)
+### Tableau 1.1.10a Ancien fumeurs de produits à base de tabac (ayant cessé de fumer)  (T8)
 ```{r tab_1_1_10a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -540,7 +540,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.1.10b Ancien fumeurs, par âge et sexe
+### Tableau 1.1.10b Ancien fumeurs, par âge et sexe (T8)
 ```{r tab_1_1_10b}
 tab <- svyby( ~ t8, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -560,7 +560,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tableau 1.1.11a Ancien fumeurs quotidiens de produits à base de tabac (ayant cessé de fumer)
+### Tableau 1.1.11a Ancien fumeurs quotidiens de produits à base de tabac (ayant cessé de fumer) (T9)
 ```{r tab_1_1_11a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -597,7 +597,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.1.11b Ancien fumeurs quotidiens, par âge et sexe
+### Tableau 1.1.11b Ancien fumeurs quotidiens, par âge et sexe (T9)
 ```{r tab_1_1_11b}
 tab <- svyby( ~ t9, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -648,7 +648,7 @@ tbl_svysummary(d,
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.1.12b Quelqu'un a fumé au domicile lors des 30 derniers jours, par âge et sexe
+### Tableau 1.1.12b Quelqu'un a fumé au domicile lors des 30 derniers jours, par âge et sexe (T17)
 ```{r tab_1_1_12b}
 tab <- svyby( ~ t17, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -699,7 +699,7 @@ tbl_svysummary(d,
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.1.13b Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours, par âge et sexe
+### Tableau 1.1.13b Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours, par âge et sexe (T18)
 ```{r tab_1_1_13b}
 tab <- svyby( ~ t18, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -724,7 +724,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 ## 1.2 Pakalolo
 
-### Tableau 1.2.1a Fumeur de pakalolo 
+### Tableau 1.2.1a Fumeur de pakalolo (X2)
 ```{r tab_1_2_1a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -756,7 +756,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.1b Fumeurs, par âge et sexe
+### Tableau 1.2.1b Fumeurs, par âge et sexe (X2)
 ```{r tab_1_2_1b}
 tab <- svyby( ~ x2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -806,7 +806,7 @@ tbl_svysummary(
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.2.2b Age de la première cigarette, par âge et sexe
+### Tableau 1.2.2b Age de la première cigarette, par âge et sexe (X3)
 ```{r tab_1_2_2b}
 tab <- svyby( ~ paka.X3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -858,7 +858,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.3b Fumeurs, par âge et sexe
+### Tableau 1.2.3b Fumeurs, par âge et sexe (X4)
 ```{r tab_1_2_3b}
 tab <- svyby( ~ x4, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
@@ -912,7 +912,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.4b Fréquence, par sexe
+### Tableau 1.2.4b Fréquence, par sexe (X5)
 ```{r tab_1_2_4b}
 tbl_svysummary(d,
                include = c(X5, sexe),
@@ -930,7 +930,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.4c Fréquence, par âge
+### Tableau 1.2.4c Fréquence, par âge (X5)
 ```{r tab_1_2_4c}
 tbl_svysummary(d,
                include = c(X5, agegr),
@@ -980,7 +980,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.2.5b Age de début, par âge et sexe
+### Tableau 1.2.5b Age de début, par âge et sexe (X6)
 ```{r tab_1_2_5b}
 tab <- svyby( ~ paka.X6, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -1032,7 +1032,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.6b Fréquence, par sexe
+### Tableau 1.2.6b Fréquence, par sexe (X7)
 ```{r tab_1_2_6b}
 tbl_svysummary(d,
                include = c(X7, sexe),
@@ -1050,7 +1050,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.6c Fréquence, par âge
+### Tableau 1.2.6c Fréquence, par âge (X7)
 ```{r tab_1_2_6c}
 tbl_svysummary(d,
                include = c(X7, agegr),
@@ -1068,27 +1068,10 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.6d Fréquence, par âge et sexe
+
+
+### Tableau 1.2.6d Fréquence, par archipel
 ```{r tab_1_2_6d}
-tbl_svysummary(d,
-               include = c(X7, agegr, sexe),
-               label = list(X7 ~ "Fréquence (12 derniers mois)", sexe ~ "Sexe"),
-               statistic = list(all_categorical() ~ "{p}"),
-               by = agegr) |>
-  modify_header(label ~ "") |>
-  add_ci(
-    pattern = "{stat} ({ci})",
-    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
-  )  |>
-  modify_header(label ~ "**Groupe d'âge**",
-                all_stat_cols() ~ "**{level} (IC 95%)**") |>
-  bold_labels()
-
-```
-
-
-### Tableau 1.2.7d Fréquence, par Archipel
-```{r tab_1_2_7d}
 tbl_svysummary(d,
                include = c(X7),
                label = list(X7 ~ "Fréquence (12 derniers mois)"),
@@ -1109,7 +1092,7 @@ tbl_svysummary(d,
 
 ## 1.3 Alcool 
 
-### Tableau 1.3.1a Ayant déjà consommé de l'alcool
+### Tableau 1.3.1a Ayant déjà consommé de l'alcool (A1)
 
 ```{r tab_1_3_1a}
 d <- survey::svydesign(
@@ -1142,7 +1125,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.1b Déjà consommé, par âge et sexe
+### Tableau 1.3.1b Déjà consommé, par âge et sexe (A1)
 
 ```{r tab_1_3_1b}
 tab <- svyby( ~ a1, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -1163,7 +1146,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tableau 1.3.2a Ayant consommé de l'alcool ces 12 derniers mois
+### Tableau 1.3.2a Ayant consommé de l'alcool ces 12 derniers mois (A2)
 
 ```{r tab_1_3_2a}
 d <- survey::svydesign(
@@ -1196,7 +1179,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.2b Ayant consommé de l'alcool ces 12 derniers mois, par âge et sexe
+### Tableau 1.3.2b Ayant consommé de l'alcool ces 12 derniers mois, par âge et sexe (A2)
 
 ```{r tab_1_3_2b}
 tab <- svyby( ~ a2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -1217,7 +1200,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tableau 1.3.3a Ayant arrêté de boire de l'alcool pour raison de santé
+### Tableau 1.3.3a Ayant arrêté de boire de l'alcool pour raison de santé (A3)
 
 ```{r tab_1_3_3a}
 d <- survey::svydesign(
@@ -1250,7 +1233,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.3b Ayant arrêté de boire de l'alcool, par âge et sexe
+### Tableau 1.3.3b Ayant arrêté de boire de l'alcool, par âge et sexe (A3)
 
 ```{r tab_1_3_3b}
 tab <- svyby( ~ a3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -1271,7 +1254,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tablean 1.3.4 Fréquence de consommation d'un verre standard d'alcool ces 12 derniers mois (X7)
+### Tablean 1.3.4 Fréquence de consommation d'un verre standard d'alcool ces 12 derniers mois (A4)
 ```{r tab_1_3_4a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -1302,7 +1285,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.4b Fréquence, par sexe
+### Tableau 1.3.4b Fréquence, par sexe (A4)
 ```{r tab_1_3_4b}
 tbl_svysummary(d,
                include = c(A4, sexe),
@@ -1320,7 +1303,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.4c Fréquence, par âge
+### Tableau 1.3.4c Fréquence, par âge (A4)
 ```{r tab_1_3_4c}
 tbl_svysummary(d,
                include = c(A4, agegr),
@@ -1340,7 +1323,7 @@ tbl_svysummary(d,
 
 
 
-### Tableau 1.3.4d Fréquence, par Archipel
+### Tableau 1.3.4d Fréquence, par Archipel (A4)
 ```{r tab_1_3_4d}
 tbl_svysummary(d,
                include = c(A4),
@@ -1360,7 +1343,7 @@ tbl_svysummary(d,
 
 
 
-### Tableau 1.3.5a Ayant consommé de l'alcool ces 30 derniers jours
+### Tableau 1.3.5a Ayant consommé de l'alcool ces 30 derniers jours (A5)
 
 ```{r tab_1_3_5a}
 d <- survey::svydesign(
@@ -1393,7 +1376,9 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.5b Ayant consommé de l'alcool ces 30 derniers jours, par âge et sexe
+
+
+### Tableau 1.3.5b Ayant consommé de l'alcool ces 30 derniers jours, par âge et sexe (A5)
 
 ```{r tab_1_3_5b}
 tab <- svyby( ~ a5, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -1415,7 +1400,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.6a Au cours des 30 derniers jours, à combien d'occasions avez-vous bu au moins un verre d'alcool
+### Tableau 1.3.6a Au cours des 30 derniers jours, à combien d'occasions avez-vous bu au moins un verre d'alcool (A6)
 
 ```{r tab_1_3_6a}
 d <- survey::svydesign(
@@ -1445,7 +1430,7 @@ tbl_svysummary(
   modify_footnote(update = everything() ~ NA)
 
 ```
-### Tableau 1.3.6b Nombre d'occasions, par âge et sexe
+### Tableau 1.3.6b Nombre d'occasions, par âge et sexe (A6)
 ```{r tab_1_3_6b}
 tab <- svyby( ~ A6, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -1465,7 +1450,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 ```
 
 
-### Tableau 1.3.7a Au cours des 30 derniers jours, nombre moyen de verres d'alcool bus par occasion
+### Tableau 1.3.7a Au cours des 30 derniers jours, nombre moyen de verres d'alcool bus par occasion (A7)
 
 ```{r tab_1_3_7a}
 d <- survey::svydesign(
@@ -1496,7 +1481,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.7b Nombre de verres, par âge et sexe
+### Tableau 1.3.7b Nombre de verres, par âge et sexe (A7)
 ```{r tab_1_3_7b}
 tab <- svyby( ~ A7, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -1517,7 +1502,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.8a Au cours des 30 derniers jours, plus grand nombre de verres d'alcool bus en une fois
+### Tableau 1.3.8a Au cours des 30 derniers jours, plus grand nombre de verres d'alcool bus en une fois (A8)
 
 ```{r tab_1_3_8a}
 d <- survey::svydesign(
@@ -1548,7 +1533,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.8b Plus grand nombre de verres en une fois, par âge et sexe
+### Tableau 1.3.8b Plus grand nombre de verres en une fois, par âge et sexe (A8)
 ```{r tab_1_3_8b}
 tab <- svyby( ~ A8, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -1569,7 +1554,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.9a Au cours des 30 derniers jours, nombre de fois au moins 6 verres d'alcool ont été bus en une occasion
+### Tableau 1.3.9a Au cours des 30 derniers jours, nombre de fois au moins 6 verres d'alcool ont été bus en une occasion (A9)
 
 ```{r tab_1_3_9a}
 d <- survey::svydesign(
@@ -1600,7 +1585,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.9b Nombre de fois au moins 6 verres, par âge et sexe
+### Tableau 1.3.9b Nombre de fois au moins 6 verres, par âge et sexe (A9)
 ```{r tab_1_3_9b}
 tab <- svyby( ~ A9, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -1621,7 +1606,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.10a Au cours des 30 derniers jours, nombre de fois au moins 6 verres d'alcool ont été bus en une occasion
+### Tableau 1.3.10a Au cours des 7 derniers jours, nombre de verres d'alcool ont été bus par jour (A10)
 
 ```{r tab_1_3_10a}
 d <- survey::svydesign(
@@ -1665,7 +1650,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.10b Nombre de fois au moins 6 verres, par sexe
+### Tableau 1.3.10b Nombre de verres, par sexe (A10)
 ```{r tab_1_3_10b}
 tbl_svysummary(
   d,
@@ -1685,7 +1670,7 @@ tbl_svysummary(
 ```
 
 
-### Tableau 1.3.10c Nombre de fois au moins 6 verres, par groupe d'âge
+### Tableau 1.3.10c Nombre de verres, par groupe d'âge (A10)
 ```{r tab_1_3_10c}
 tbl_svysummary(
   d,
@@ -1706,7 +1691,7 @@ tbl_svysummary(
 
 
 
-### Tablean 1.3.11a Problèmes de famille à cause de l'alcool au cours des 12 derniers mois
+### Tablean 1.3.11a Problèmes de famille à cause de l'alcool au cours des 12 derniers mois (A16)
 ```{r tab_1_3_11a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -1737,7 +1722,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.11b Fréquence, par sexe
+### Tableau 1.3.11b Fréquence, par sexe (A16)
 ```{r tab_1_3_11b}
 tbl_svysummary(d,
                include = c(A16, sexe),
@@ -1755,7 +1740,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.11c Fréquence, par âge
+### Tableau 1.3.11c Fréquence, par âge (A16)
 ```{r tab_1_3_11c}
 tbl_svysummary(d,
                include = c(A16, agegr),
@@ -1779,7 +1764,7 @@ tbl_svysummary(d,
 
 ## 1.4 Nutrition
 
-### Tableau 1.4.1a Consommation de fruits: nombre de jours par semaine
+### Tableau 1.4.1a Consommation de fruits: nombre de jours par semaine (D1)
 
 ```{r tab_1_4_1a}
 d <- survey::svydesign(
@@ -1811,7 +1796,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.4.1b Nombre d'occasions, par âge et sexe
+### Tableau 1.4.1b Nombre d'occasions, par âge et sexe (D1)
 
 ```{r tab_1_4_1b}
 tab <- svyby( ~ diet.D1, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -1833,7 +1818,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.4.2a Consommation de fruits: nombre de portions par jour
+### Tableau 1.4.2a Consommation de fruits: nombre de portions par jour (D2)
 
 ```{r tab_1_4_2a}
 d <- survey::svydesign(
@@ -1865,7 +1850,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.4.2b Nombre de portions, par âge et sexe
+### Tableau 1.4.2b Nombre de portions, par âge et sexe (D2)
 
 ```{r tab_1_4_2b}
 tab <- svyby( ~ diet.fruits_serv.D2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -1889,7 +1874,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.4.3 Raisons de ne pas consommer plus de fruits
+### Tableau 1.4.3 Raisons de ne pas consommer plus de fruits (X8)
 
 ```{r tab_1_4_3}
 d <- survey::svydesign(
@@ -1951,7 +1936,7 @@ tbl_svysummary(
 
 
 
-### Tableau 1.4.4a Consommation de légumes: nombre de jours par semaine
+### Tableau 1.4.4a Consommation de légumes: nombre de jours par semaine (D3)
 
 ```{r tab_1_4_4a}
 d <- survey::svydesign(
@@ -1983,7 +1968,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.4.4b Nombre de jours, par âge et sexe
+### Tableau 1.4.4b Nombre de jours, par âge et sexe (D3)
 
 ```{r tab_1_4_4b}
 tab <- svyby( ~ diet.D3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -2005,7 +1990,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.4.5 Raisons de ne pas consommer plus de légumes
+### Tableau 1.4.5 Raisons de ne pas consommer plus de légumes (X9)
 
 ```{r tab_1_4_5}
 d <- survey::svydesign(
@@ -2067,7 +2052,7 @@ tbl_svysummary(
 
 
 
-### Tableau 1.4.6a Consommation de légumes: nombre de portions par jour
+### Tableau 1.4.6a Consommation de légumes: nombre de portions par jour (D4)
 
 ```{r tab_1_4_6a}
 d <- survey::svydesign(
@@ -2099,7 +2084,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.4.6b Nombre de portions, par âge et sexe
+### Tableau 1.4.6b Nombre de portions, par âge et sexe (D4)
 
 ```{r tab_1_4_6b}
 tab <- svyby( ~ diet.vegetables_serv.D4, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -2121,7 +2106,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tablean 1.4.7a Ajouter du sel ou sauce de soja en mangeant (avant ou pendant)
+### Tablean 1.4.7a Ajouter du sel ou sauce de soja en mangeant (avant ou pendant) (D5)
 
 ```{r tab_1_4_7a}
 d <- survey::svydesign(
@@ -2153,7 +2138,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.7b Fréquence, par sexe
+### Tableau 1.4.7b Fréquence, par sexe (D5)
 ```{r tab_1_4_7b}
 tbl_svysummary(d,
                include = c(D5, sexe),
@@ -2175,7 +2160,7 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.4.8a Ajouter du sel ou sauce de soja en faisant la cuisine
+### Tablean 1.4.8a Ajouter du sel ou sauce de soja en faisant la cuisine (D6)
 
 ```{r tab_1_4_8a}
 d <- survey::svydesign(
@@ -2207,7 +2192,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.8b Fréquence, par sexe
+### Tableau 1.4.8b Fréquence, par sexe (D6)
 ```{r tab_1_4_8b}
 tbl_svysummary(d,
                include = c(D6, sexe),
@@ -2228,7 +2213,7 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.4.9a Manger des aliments riches en sel
+### Tablean 1.4.9a Manger des aliments riches en sel (D7)
 
 ```{r tab_1_4_9a}
 d <- survey::svydesign(
@@ -2260,7 +2245,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.9b Fréquence, par sexe
+### Tableau 1.4.9b Fréquence, par sexe (D7)
 ```{r tab_1_4_9b}
 tbl_svysummary(d,
                include = c(D7, sexe),
@@ -2281,7 +2266,7 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.4.10a Quantité de sel consommée
+### Tablean 1.4.10a Quantité de sel consommée (D8)
 
 ```{r tab_1_4_10a}
 d <- survey::svydesign(
@@ -2313,7 +2298,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.10b Quantité de sel, par sexe
+### Tableau 1.4.10b Quantité de sel, par sexe (D8)
 ```{r tab_1_4_10b}
 tbl_svysummary(d,
                include = c(D8, sexe),
@@ -2337,7 +2322,7 @@ tbl_svysummary(d,
 
 ## 1.5 Hygiène alimentaire
 
-### Tableau 1.5.1 Attitudes alimentaires vis-à-vis du sel
+### Tableau 1.5.1 Attitudes alimentaires vis-à-vis du sel (D10-D11)
 
 ```{r tab_1_5_1}
 d <- survey::svydesign(
@@ -2383,7 +2368,7 @@ tbl_svysummary(
 ```
 
 
-### Tablean 1.5.2a Fréquence de consommations de boissons sucrées
+### Tablean 1.5.2a Fréquence de consommations de boissons sucrées (X10)
 
 ```{r tab_1_5_2a}
 d <- survey::svydesign(
@@ -2415,7 +2400,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.5.2b Fréquence, par sexe
+### Tableau 1.5.2b Fréquence, par sexe (X10)
 ```{r tab_1_5_2b}
 tbl_svysummary(d,
                include = c(X10, sexe),
@@ -2436,7 +2421,7 @@ tbl_svysummary(d,
 
 
 
-### Tableau 1.5.3a Consommation de boissons sucrées: nombre de verres par jour
+### Tableau 1.5.3a Consommation de boissons sucrées: nombre de verres par jour (X11)
 
 ```{r tab_1_5_3a}
 d <- survey::svydesign(
@@ -2468,7 +2453,7 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.5.3b Nombre de verres, par âge et sexe
+### Tableau 1.5.3b Nombre de verres, par âge et sexe (X11)
 
 ```{r tab_1_5_3b}
 tab <- svyby( ~ X11, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -2490,7 +2475,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tablean 1.5.4a Moment de consommation de boissons sucrées
+### Tablean 1.5.4a Moment de consommation de boissons sucrées (X12)
 
 ```{r tab_1_5_4a}
 d <- survey::svydesign(
@@ -2522,7 +2507,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.5.4b Fréquence, par sexe
+### Tableau 1.5.4b Fréquence, par sexe (X12)
 ```{r tab_1_5_4b}
 tbl_svysummary(d,
                include = c(X12, sexe),
@@ -2543,7 +2528,7 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.5.5a Fréquence de consommation de junk food
+### Tablean 1.5.5a Fréquence de consommation de junk food (X13)
 
 ```{r tab_1_5_5a}
 d <- survey::svydesign(
@@ -2575,7 +2560,7 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.5.5b Fréquence, par sexe
+### Tableau 1.5.5b Fréquence, par sexe (X13)
 ```{r tab_1_5_5b}
 tbl_svysummary(d,
                include = c(X13, sexe),
@@ -2603,9 +2588,1576 @@ tbl_svysummary(d,
 
 ## 1.6 Activité physique
 
+### Tableau 1.6.1a Activité physique intense au travail (P1)
+
+```{r tab_1_6_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = yesno(physical.P1.P1),
+    Var = factor(
+      yesno(physical.P1.P1),
+      levels = 0:1,
+      labels = c("Non", "Oui")
+    )
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique intense au travail"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+### Tableau 1.6.1b Activité intense au travail, par âge et sexe (P1)
+
+```{r tab_1_6_1b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique intense au travail"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.2a Activités de forte intensité au travail: nombre de jours par semaine (P2)
+
+```{r tab_1_6_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P2 < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P2)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre de jours"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.2b Nombre de jours, par âge et sexe (P2)
+
+```{r tab_1_6_2b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de jours (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.3a Jours d'activités de forte intensité au travail: nombre d'heures par jour (P3)
+
+```{r tab_1_6_3a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P3.P3a < 77 &
+                 physical.P3.P3b < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P3.P3a + physical.P3.P3b / 60)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre d'heures"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.3b Nombre d'heures, par âge et sexe (P3)
+
+```{r tab_1_6_3b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre d'heures (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.4a Activité physique modérée au travail (P4)
+
+```{r tab_1_6_4a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = yesno(physical.P1.P1),
+    Var = factor(
+      yesno(physical.P1.P1),
+      levels = 0:1,
+      labels = c("Non", "Oui")
+    )
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique modérée au travail"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.4b Activité modérée au travail, par âge et sexe (P4)
+
+```{r tab_1_6_4b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique modérée au travail (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.6.5a Activités de forte intensité au travail: nombre de jours par semaine (P5)
+
+```{r tab_1_6_5a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P5 < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P5)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre de jours"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.5b Nombre de jours, par âge et sexe (P5)
+
+```{r tab_1_6_5b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de jours (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.6a Jours d'activités de forte intensité au travail: nombre d'heures par jour (P6)
+
+```{r tab_1_6_6a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P6.P6a < 77 &
+                 physical.P6.P6b < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P6.P6a + physical.P6.P6b / 60)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre d'heures"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.6b Nombre d'heures, par âge et sexe (P6)
+
+```{r tab_1_6_6b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre d'heures (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.7a Trajets d'au mopins 10 minutes à pied ou à vélo (P7)
+
+```{r tab_1_6_7a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = yesno(physical.P7),
+    Var = factor(
+      yesno(physical.P7),
+      levels = 0:1,
+      labels = c("Non", "Oui")
+    )
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Trajet d'au moins 10 minutes"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.7b Trajets d'au moins 10 minutes, par âge et sexe (P7)
+
+```{r tab_1_6_7b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Trajet d'au moins 10 minutes (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.6.8a Trajets d'au moins 10 minutes à pied ou à vélo: nombre de jours par semaine (P8)
+
+```{r tab_1_6_8a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P8 < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P8)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre de jours"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.8b Nombre de jours, par âge et sexe (P8)
+
+```{r tab_1_6_8b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de jours (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.9a Trajet habituel d'au moins 10 minutes: nombre d'heures par trajet (P9)
+
+```{r tab_1_6_9a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P9.P9a < 77 &
+                 physical.P9.P9b < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P9.P9a + physical.P9.P9b / 60)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre d'heures"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.9b Nombre d'heures, par âge et sexe (P9)
+
+```{r tab_1_6_9b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre d'heures (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.10a Sport intense (P10)
+
+```{r tab_1_6_10a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = yesno(physical.P10.P10),
+    Var = factor(
+      yesno(physical.P10.P10),
+      levels = 0:1,
+      labels = c("Non", "Oui")
+    )
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Sport intense"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.10b Sport intense, par âge et sexe (P10)
+
+```{r tab_1_6_10b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Sport intense (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.6.11a Sport intense: nombre de jours par semaine (P11)
+
+```{r tab_1_6_11a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P11 < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P11)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre de jours"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.11b Nombre de jours, par âge et sexe (P11)
+
+```{r tab_1_6_11b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de jours (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.12a Sport intense: nombre d'heures par jour (P12)
+
+```{r tab_1_6_12a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P12.P12a < 77 &
+                 physical.P12.P12b < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P12.P12a + physical.P12.P12b / 60)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre d'heures"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.12b Nombre d'heures, par âge et sexe (P12)
+
+```{r tab_1_6_12b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre d'heures (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.13a Sport modéré (P13)
+
+```{r tab_1_6_13a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = yesno(physical.P13.P13),
+    Var = factor(
+      yesno(physical.P13.P13),
+      levels = 0:1,
+      labels = c("Non", "Oui")
+    )
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Sport modéré"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.13b Sport modéré, par âge et sexe (P13)
+
+```{r tab_1_6_13b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Sport modéré (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.6.14a Sport modéré: nombre de jours par semaine (P14)
+
+```{r tab_1_6_14a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P14 < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P14)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre de jours"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.14b Nombre de jours, par âge et sexe (P14)
+
+```{r tab_1_6_14b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre de jours (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.15a Sport modéré: nombre d'heures par jour (P15)
+
+```{r tab_1_6_15a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P15.P15a < 77 &
+                 physical.P15.P15b < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P15.P15a + physical.P15.P15b / 60)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre d'heures"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.15b Nombre d'heures, par âge et sexe (P15)
+
+```{r tab_1_6_15b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre d'heures (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
+### Tableau 1.6.16a Comportement édentaire: nombre d'heures par jour (P16)
+
+```{r tab_1_6_16a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 physical.P16.P16a < 77 &
+                 physical.P16.P16b < 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          var = physical.P16.P16a + physical.P16.P16b / 60)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(var),
+  label = list(var ~ "Nombre d'heures"),
+  type = list(var ~ 'continuous'),
+  statistic = list(var ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.6.16b Nombre d'heures, par âge et sexe (P16)
+
+```{r tab_1_6_16b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Nombre d'heures (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+
 
 
 ## 1.7 Qualité de vie
+
+### Tablean 1.7.1a Pensez-vous que votre santé est : (X14)
+
+```{r tab_1_7_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5e(Life.X14))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.1b Qualification, par sexe (X14)
+```{r tab_1_7_1b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+### Tablean 1.7.2a Etes-vous limité pour des efforts physiques modérés : (X15)
+
+```{r tab_1_7_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq3b(Life.X15))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.2b Qualification, par sexe (X15)
+```{r tab_1_7_2b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+### Tablean 1.7.3a Etes-vous limité pour monter plusieurs étages par l'escalier : (X16)
+
+```{r tab_1_7_3a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq3b(Life.X16))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.3b Qualification, par sexe (X16)
+```{r tab_1_7_3b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+### Tablean 1.7.4a Au cours des 4 dernières semaines,, en raison de votre état émotionnel, avez-vous accompli moins de choses que vous auriez souhaité : (X17)
+
+```{r tab_1_7_4a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note12.X17))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.4b Qualification, par sexe (X17)
+```{r tab_1_7_4b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.7.5a Avez-vous été limité pour faire certaines choses : (X18)
+
+```{r tab_1_7_5a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note12.X18))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.5b Qualification, par sexe (X18)
+```{r tab_1_7_5b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.7.6a Au cours des 4 dernières semaines, en raison de votre état physique, avez-vous été limité pour faire certaines choses : (X19)
+
+```{r tab_1_7_6a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note14.X19))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.6b Qualification, par sexe (X19)
+```{r tab_1_7_6b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.7.7a Avez-vous été limité pour faire certaines choses : (X20)
+
+```{r tab_1_7_7a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note14.X20))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.7b Qualification, par sexe (X20)
+```{r tab_1_7_7b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+### Tablean 1.7.8a Au cours des 4 dernières semaines, en raison de votre état physique, dans quelle mesure vos douleurs physiques vous ont-elles limité dans votre travail ou vos activités domestiques : (X21)
+
+```{r tab_1_7_8a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5g(note14.X21))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.8b Qualification, par sexe (X21)
+```{r tab_1_7_8b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Qualification"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.7.9a Y a-til eu des moments où vous vous êtes senti calme et détendu : (X22)
+
+```{r tab_1_7_9a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note16.X22))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.9b Fréquence, par sexe (X22)
+```{r tab_1_7_9b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.7.10a Y a-til eu des moments où vous vous êtes senti débordant d'énergie : (X23)
+
+```{r tab_1_7_10a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note16.X23))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.10b Fréquence, par sexe (X23)
+```{r tab_1_7_10b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+### Tablean 1.7.11a Y a-til eu des moments où vous vous êtes senti triste et abattu : (X24)
+
+```{r tab_1_7_11a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note18.X24))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.11b Fréquence, par sexe (X24)
+```{r tab_1_7_11b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
+
+
+
+### Tablean 1.7.12a Y a-til eu des moments où vous vous êtes senti triste et abattu : (X25)
+
+```{r tab_1_7_12a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(uid,
+                              w1,
+                              gstratum,
+                              agegr,
+                              bmigr,
+                              sexe,
+                              var = freq5f(note18.X25))]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               type = var ~ "categorical",
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.7.12b Fréquence, par sexe (X25)
+```{r tab_1_7_12b}
+tbl_svysummary(d,
+               include = c(var, sexe),
+               missing = "no",
+               label = list(var ~ "Fréquence"),
+               statistic = list(all_categorical() ~ "{p}"),
+               by = sexe) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(label ~ "**Sexe**",
+                all_stat_cols() ~ "**{level}**") |>
+  bold_labels()
+
+```
+
+
 
 
 
