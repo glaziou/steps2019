@@ -227,7 +227,9 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -282,7 +284,9 @@ tbl_svysummary(
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -502,7 +506,9 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -617,7 +623,10 @@ tbl_svysummary(d,
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
   modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
-  bold_labels()
+  bold_labels() |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 ```
 
 ### Tableau 2.3.1b Prévalence du diabète par âge et sexe

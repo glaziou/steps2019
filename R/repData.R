@@ -26,10 +26,10 @@ load(here('data/steps.Rdata')) # loads latest pre-processed data
 
 # utility functions
 # recode 1=yes 2=no into 1=yes 0=no, with all other values reset to missing
-yesno <- function(x, f=FALSE){
+yesno <- function(x, f=FALSE, val='Oui'){
   x[x==2] <- 0
   x[x>1 | x<0] <- NA
-  if (f==TRUE) x <- factor(x, levels=1:0, labels = c('Oui','Non'))
+  if (f==TRUE) x <- factor(x, levels=1:0, labels = c(val,'Non'))
   return(x)
 }
 
@@ -256,10 +256,10 @@ dprop <- function(ev1, sd1, ev2, sd2, nsim = 1e5) {
 
 
 # splits multichoice questions
-qcm <- function(x, value=1) {
+qcm <- function(x, value=1, value.lab='Oui') {
   x <- gsub(" ","", x)
   y <- grepl(value, x)
-  y <- factor(y, labels=c('Non','Oui'))
+  y <- factor(y, labels=c('Non', value.lab))
   y[x==''] <- NA
   return(y)
 }
@@ -295,7 +295,7 @@ a2[, fraction := signif(enrolled * 100 / pop, 2)]  # sampling fraction
 for (i in 1:8) {
   steps[, paste0("diet.X8.", i) := qcm(diet.X8, i)]
   steps[, paste0("diet.X9.", i) := qcm(diet.X9, i)]
-} 
+}
 
 
 
@@ -307,11 +307,11 @@ steps[, sexe := factor(sexe, levels=c('Homme','Femme'))]
 steps[, gstratum := factor(gstratum, 
                            levels=c('IDV','ISLV','Autres'),
                            labels=c('Iles du vent','Iles sous le vent','Autres archipels'))]
-steps[, grosbide := factor(bigbelly, levels=0:1, labels=c('Non','Oui'))]
-steps[, Surpoids := factor(overweight, levels=0:1, labels=c('Non','Oui'))]
-steps[, Obese := factor(obese, levels=0:1, labels=c('Non','Oui'))]
-steps[, HTA := factor(hta, levels=0:1, labels=c('Non','Oui'))]
-steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
+steps[, grosbide := factor(bigbelly, levels=0:1, labels=c('Non','Obésité abdominale'))]
+steps[, Surpoids := factor(overweight, levels=0:1, labels=c('Non','Surpoids'))]
+steps[, Obese := factor(obese, levels=0:1, labels=c('Non','Obèsité'))]
+steps[, HTA := factor(hta, levels=0:1, labels=c('Non','HTA'))]
+steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Diabète'))]
 
 
 # # missed individuals

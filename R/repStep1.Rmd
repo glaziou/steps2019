@@ -54,7 +54,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     t1 = yesno(tobacco.T1),
-                                    T1 = factor(yesno(tobacco.T1), levels=0:1, labels=c("Non","Oui")))]
+                                    T1 = yesno(tobacco.T1, T, "Fumeur de tabac"))]
 )
 
 tbl_svysummary(d,
@@ -68,7 +68,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |> 
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 
@@ -105,7 +108,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     t2 = yesno(tobacco.T2),
-                                    T2 = factor(yesno(tobacco.T2), levels=0:1, labels=c("Non","Oui")))]
+                                    T2 = yesno(tobacco.T2, T, "Fumeur quotidien"))]
 )
 
 tbl_svysummary(d,
@@ -119,9 +122,12 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |> 
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
+
 ### Tableau 1.1.2b Fumeurs quotidiens, par âge et sexe (T2)
 ```{r tab_1_1_2b}
 tab <- svyby( ~ t2, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -176,7 +182,9 @@ tbl_svysummary(
   modify_footnote(update = everything() ~ NA)
 
 ```
+
 ### Tableau 1.1.3b Age de la première cigarette, par âge et sexe (T3)
+
 ```{r tab_1_1_3b}
 tab <- svyby( ~ tobacco.T3, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
@@ -418,7 +426,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,                                    
                                     t6 = yesno(tobacco.T6),
-                                    T6 = factor(yesno(tobacco.T6), levels=0:1, labels=c("Non","Oui")))]
+                                    T6 = yesno(tobacco.T6, T, "A essayé d'arrêter de fumer"))]
 )
 
 tbl_svysummary(d,
@@ -432,9 +440,12 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
+
 ### Tableau 1.1.8b Essayé d'arrêter de fumer lors des 12 derniers mois, par âge et sexe (T6)
 ```{r tab_1_1_8b}
 tab <- svyby( ~ t6, ~ agegr + sexe, d, svymean, vartype = c("ci"))
@@ -469,7 +480,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,                                    
                                     t7 = yesno(tobacco.T7),
-                                    T7 = factor(yesno(tobacco.T7), levels=0:1, labels=c("Non","Oui")))]
+                                    T7 = yesno(tobacco.T7, T, "A été conseillé d'arrêter de fumer"))]
 )
 
 tbl_svysummary(d,
@@ -483,7 +494,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 ### Tableau 1.1.9b Un professionnel conseille d'arrêter de fumer lors des 12 derniers mois, par âge et sexe (T7)
@@ -522,7 +536,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     t8 = yesno(tobacco.T8),
-                                    T8 = factor(yesno(tobacco.T8), levels=0:1, labels=c("Non","Oui")))]
+                                    T8 = yesno(tobacco.T8, T, "Ancien fumeur de tabac"))]
 )
 
 tbl_svysummary(d,
@@ -536,7 +550,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 
@@ -574,11 +591,7 @@ d <- survey::svydesign(
     bmigr,
     sexe,
     t9 = yesno(tobacco.T9),
-    T9 = factor(
-      yesno(tobacco.T9),
-      levels = 0:1,
-      labels = c("Non", "Oui")
-    )
+    T9 = yesno(tobacco.T9, T, "Ancien fumeur quotidien")
   )]
 )
 
@@ -593,7 +606,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 
@@ -631,7 +647,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,                                    
                                     t17 = yesno(tobacco.T17),
-                                    T17 = factor(yesno(tobacco.T17), levels=0:1, labels=c("Non","Oui")))]
+                                    T17 = yesno(tobacco.T17, T, "Quelqu'un a fumé au domicile"))]
 )
 
 tbl_svysummary(d,
@@ -645,7 +661,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 ### Tableau 1.1.12b Quelqu'un a fumé au domicile lors des 30 derniers jours, par âge et sexe (T17)
@@ -682,7 +701,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,                                    
                                     t18 = yesno(tobacco.T18),
-                                    T18 = factor(yesno(tobacco.T18), levels=0:1, labels=c("Non","Oui")))]
+                                    T18 = yesno(tobacco.T18, T, "Quelqu'un a fumé au travail"))]
 )
 
 tbl_svysummary(d,
@@ -696,7 +715,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 ### Tableau 1.1.13b Quelqu'un a fumé dans un lieu clos au travail lors des 30 derniers jours, par âge et sexe (T18)
@@ -738,7 +760,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     x2 = yesno(paka.X2),
-                                    X2 = factor(yesno(paka.X2), levels=0:1, labels=c("Non","Oui")))]
+                                    X2 = yesno(paka.X2, T, "Fumeur de pakalolo"))]
 )
 
 tbl_svysummary(d,
@@ -752,7 +774,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 
@@ -840,7 +865,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     x4 = yesno(paka.X4),
-                                    X4 = factor(yesno(paka.X4), levels=0:1, labels=c("Non","Oui")))]
+                                    X4 = yesno(paka.X4, T, "Fumeur de paka au cours des 12 derniers mois"))]
 )
 
 tbl_svysummary(d,
@@ -854,7 +879,10 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 
@@ -1107,7 +1135,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     a1 = yesno(alcohol.A1),
-                                    A1 = factor(yesno(alcohol.A1), levels=0:1, labels=c("Non","Oui")))]
+                                    A1 = yesno(alcohol.A1, T, "A déjà consommé de l'alcool"))]
 )
 
 tbl_svysummary(d,
@@ -1121,7 +1149,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -1161,12 +1191,11 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     a2 = yesno(alcohol.A2),
-                                    A2 = factor(yesno(alcohol.A2), levels=0:1, labels=c("Non","Oui")))]
+                                    A2 = yesno(alcohol.A2, T, "A consommé de l'alcool ces 12 derniers mois"))]
 )
 
 tbl_svysummary(d,
                include = c(A2),
-               label = list(A2 ~ "Consommé de l'alcool ces 12 derniers mois"),
                statistic = list(all_categorical() ~ "{p}")) |>
   modify_header(label ~ "") |>
   add_ci(
@@ -1175,7 +1204,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -1215,7 +1246,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     a3 = yesno(alcohol.A3),
-                                    A3 = factor(yesno(alcohol.A3), levels=0:1, labels=c("Non","Oui")))]
+                                    A3 = yesno(alcohol.A3, T, "A arrêté de boire pour raison de santé"))]
 )
 
 tbl_svysummary(d,
@@ -1229,7 +1260,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -1358,7 +1391,7 @@ d <- survey::svydesign(
                                     bmigr,
                                     sexe,
                                     a5 = yesno(A5),
-                                    A5 = factor(yesno(A5), levels=0:1, labels=c("Non","Oui")))]
+                                    A5 = yesno(A5, T, "A bu de l'alcool ces 30 derniers jours"))]
 )
 
 tbl_svysummary(d,
@@ -1372,7 +1405,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -1888,38 +1923,28 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    diet.X8.1,
-    diet.X8.2,
-    diet.X8.3,
-    diet.X8.4,
-    diet.X8.5,
-    diet.X8.6,
-    diet.X8.7,
-    diet.X8.8
+    X8.1 = qcm(as.numeric(diet.X8.1), 2, value.lab = "Consommation de fruits est suffisante (X8.1)"),
+    X8.2 = qcm(as.numeric(diet.X8.2), 2, value.lab = "Prix trop élevé (X8.2)"),
+    X8.3 = qcm(as.numeric(diet.X8.3), 2, value.lab = "Difficultés d'approvisionnement (X8.3)"),
+    X8.4 = qcm(as.numeric(diet.X8.4), 2, value.lab = "Préparation contraignante (X8.4)"),
+    X8.5 = qcm(as.numeric(diet.X8.5), 2, value.lab = "Présence de pesticides (X8.5)"),
+    X8.6 = qcm(as.numeric(diet.X8.6), 2, value.lab = "Absence d'arbres fruitiers (X8.6)"),
+    X8.7 = qcm(as.numeric(diet.X8.7), 2, value.lab = "N'aime pas les fruits (X8.7)"),
+    X8.8 = qcm(as.numeric(diet.X8.8), 2, value.lab = "Autre raison (X8.8)")
   )]
 )
 
 tbl_svysummary(
   d,
   include = c(
-    diet.X8.1,
-    diet.X8.2,
-    diet.X8.3,
-    diet.X8.4,
-    diet.X8.5,
-    diet.X8.6,
-    diet.X8.7,
-    diet.X8.8
-  ),
-  label = list(
-    diet.X8.1 ~ "Consommation de fruits est suffisante",
-    diet.X8.2 ~ "Prix trop élevé",
-    diet.X8.3 ~ "Difficultés d'approvisionnement",
-    diet.X8.4 ~ "Préparation contraignante",
-    diet.X8.5 ~ "Présence de pesticides",
-    diet.X8.6 ~ "Absence d'arbres fruitiers",
-    diet.X8.7 ~ "N'aime pas les fruits",
-    diet.X8.8 ~ "Autre raison"
+    X8.1,
+    X8.2,
+    X8.3,
+    X8.4,
+    X8.5,
+    X8.6,
+    X8.7,
+    X8.8
   ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
@@ -1930,7 +1955,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -2004,38 +2031,28 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    diet.X9.1,
-    diet.X9.2,
-    diet.X9.3,
-    diet.X9.4,
-    diet.X9.5,
-    diet.X9.6,
-    diet.X9.7,
-    diet.X9.8
+    X9.1 = qcm(as.numeric(diet.X9.1), 2, "Consommation de fruits est suffisante (X9.1)"),
+    X9.2 = qcm(as.numeric(diet.X9.2), 2, "Prix trop élevé (X9.2)"),
+    X9.3 = qcm(as.numeric(diet.X9.3), 2, "Difficultés d'approvisionnement (X9.3)"),
+    X9.4 = qcm(as.numeric(diet.X9.4), 2, "Préparation contraignante (X9.4)"),
+    X9.5 = qcm(as.numeric(diet.X9.5), 2, "Présence de pesticides (X9.5)"),
+    X9.6 = qcm(as.numeric(diet.X9.6), 2, "Absence d'arbres fruitiers (X9.6)"),
+    X9.7 = qcm(as.numeric(diet.X9.7), 2, "N'aime pas les légumes (X9.7)"),
+    X9.8 = qcm(as.numeric(diet.X9.8), 2, "Autre raison (X9.8)")
   )]
 )
 
 tbl_svysummary(
   d,
   include = c(
-    diet.X9.1,
-    diet.X9.2,
-    diet.X9.3,
-    diet.X9.4,
-    diet.X9.5,
-    diet.X9.6,
-    diet.X9.7,
-    diet.X9.8
-  ),
-  label = list(
-    diet.X9.1 ~ "Consommation de fruits est suffisante",
-    diet.X9.2 ~ "Prix trop élevé",
-    diet.X9.3 ~ "Difficultés d'approvisionnement",
-    diet.X9.4 ~ "Préparation contraignante",
-    diet.X9.5 ~ "Présence de pesticides",
-    diet.X9.6 ~ "Absence d'arbres fruitiers",
-    diet.X9.7 ~ "N'aime pas les fruits",
-    diet.X9.8 ~ "Autre raison"
+    X9.1,
+    X9.2,
+    X9.3,
+    X9.4,
+    X9.5,
+    X9.6,
+    X9.7,
+    X9.8
   ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
@@ -2046,7 +2063,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -2322,7 +2341,7 @@ tbl_svysummary(d,
 
 ## 1.5 Hygiène alimentaire
 
-### Tableau 1.5.1 Attitudes alimentaires vis-à-vis du sel (D10-D11)
+### Tableau 1.5.1 Attitudes alimentaires vis-à-vis du sel (D10, D11a-e)
 
 ```{r tab_1_5_1}
 d <- survey::svydesign(
@@ -2336,24 +2355,17 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    D10 = qcm(diet.D10, 1),
-    D11a = qcm(diet.salt.D11a, 1),
-    D11b = qcm(diet.salt.D11b, 1),
-    D11d = qcm(diet.salt.D11d, 1),
-    D11e = qcm(diet.salt.D11e, 1)
+    D10 = qcm(diet.D10, 1, value.lab = "Trop de sel est source de problèmes (D10)"),
+    D11a = qcm(diet.salt.D11a, 1, value.lab = "Il faut réduire les plats cuisinés salés (D11a)"),
+    D11b = qcm(diet.salt.D11b, 1, value.lab = "Il faut vérifier la teneur en sel sur les étiquettes (D11b)"),
+    D11d = qcm(diet.salt.D11d, 1, value.lab = "Il faut utiliser des épices autre que le sel (D11d)"),
+    D11e = qcm(diet.salt.D11e, 1, value.lab = "Il faut éviter de manger hors du domicile (D11e)")
   )]
 )
 
 tbl_svysummary(
   d,
   include = c(D10, D11a, D11b, D11d, D11e),
-  label = list(
-    D10 ~ "Trop de sel est source de problèmes",
-    D11a ~ "Il faut réduire les plats cuisinés salés",
-    D11b ~ "Il faut vérifier la teneur en sel sur les étiquettes",
-    D11d ~ "Il faut utiliser des épices autre que le sel",
-    D11e ~ "Il faut éviter de manger hors du domicile"
-  ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
 ) |>
@@ -2363,7 +2375,10 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
 
 ```
 
@@ -2603,11 +2618,7 @@ d <- survey::svydesign(
     bmigr,
     sexe,
     var = yesno(physical.P1.P1),
-    Var = factor(
-      yesno(physical.P1.P1),
-      levels = 0:1,
-      labels = c("Non", "Oui")
-    )
+    Var = yesno(physical.P1.P1, T, "Activité physique intense au travail")
   )]
 )
 
@@ -2622,7 +2633,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -2777,11 +2790,7 @@ d <- survey::svydesign(
     bmigr,
     sexe,
     var = yesno(physical.P1.P1),
-    Var = factor(
-      yesno(physical.P1.P1),
-      levels = 0:1,
-      labels = c("Non", "Oui")
-    )
+    Var = yesno(physical.P1.P1, T, "Activité physique modérée au travail")
   )]
 )
 
@@ -2796,7 +2805,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -2948,11 +2959,7 @@ d <- survey::svydesign(
     bmigr,
     sexe,
     var = yesno(physical.P7),
-    Var = factor(
-      yesno(physical.P7),
-      levels = 0:1,
-      labels = c("Non", "Oui")
-    )
+    Var = yesno(physical.P7, T, "Trajets d'au mopins 10 minutes à pied ou à vélo")
   )]
 )
 
@@ -2967,7 +2974,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -3119,11 +3128,7 @@ d <- survey::svydesign(
     bmigr,
     sexe,
     var = yesno(physical.P10.P10),
-    Var = factor(
-      yesno(physical.P10.P10),
-      levels = 0:1,
-      labels = c("Non", "Oui")
-    )
+    Var = yesno(physical.P10.P10, T, "Sport intense")
   )]
 )
 
@@ -3138,7 +3143,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -3290,11 +3297,7 @@ d <- survey::svydesign(
     bmigr,
     sexe,
     var = yesno(physical.P13.P13),
-    Var = factor(
-      yesno(physical.P13.P13),
-      levels = 0:1,
-      labels = c("Non", "Oui")
-    )
+    Var = yesno(physical.P13.P13, T, "Sport modéré")
   )]
 )
 
@@ -3309,7 +3312,9 @@ tbl_svysummary(d,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -4177,12 +4182,12 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    H1=yesno(hx_raised_bp.H1, T),
-    H2a=yesno(hx_raised_bp.H2a, T),
-    H2b=yesno(hx_raised_bp.H2b, T),
-    H3=yesno(hx_raised_bp.H3, T),
-    H4=yesno(hx_raised_bp.H4, T),
-    H5=yesno(hx_raised_bp.H5, T)
+    H1=yesno(hx_raised_bp.H1, T, "TA déjà mesurée par un professionnel (H1)"),
+    H2a=yesno(hx_raised_bp.H2a, T, "Un professionnel vous a dit que vous aviez une TA élevée (H2a)"),
+    H2b=yesno(hx_raised_bp.H2b, T, "Vous a t-on dit cela ces 12 derniers mois (H2b)"),
+    H3=yesno(hx_raised_bp.H3, T, "Médicaments prescrits ces 2 dernières semaines pour HTA (H3)"),
+    H4=yesno(hx_raised_bp.H4, T, "Avez vous vu un tahua pour votre HTA (H4)"),
+    H5=yesno(hx_raised_bp.H5, T, "Prenez vous un remède traditionnel pour votre HTA (H5)")
   )]
 )
 
@@ -4196,14 +4201,6 @@ tbl_svysummary(
     H4,
     H5
   ),
-  label = list(
-    H1 ~ "TA déjà mesurée par un professionnel (H1) ",
-    H2a ~ "Un professionnel vous a dit que vous aviez une TA élevée (H2a)",
-    H2b ~ "Vous a t-on dit cela ces 12 derniers mois (H2b)",
-    H3 ~ "Médicaments prescrits ces 2 dernières semaines pour HTA (H3)",
-    H4 ~ "Avez vous vu un tahua pour votre HTA (H4)",
-    H5 ~ "Prenez vous un remède traditionnel pour votre HTA (H5)"
-  ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
 ) |>
@@ -4213,7 +4210,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -4233,13 +4232,13 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    H6=yesno(hx_diabetes.H6, T),
-    H7a=yesno(hx_diabetes.H7a, T),
-    H7b=yesno(hx_diabetes.H7b, T),
-    H8=yesno(hx_diabetes.H8, T),
-    H9=yesno(hx_diabetes.H9, T),
-    H10=yesno(hx_diabetes.H10, T),
-    H11=yesno(hx_diabetes.H11, T)
+    H6=yesno(hx_diabetes.H6, T, "Glycémie déjà mesurée par un professionnel (H6)"),
+    H7a=yesno(hx_diabetes.H7a, T, "Un professionnel vous a dit que vous aviez du diabète (H7a)"),
+    H7b=yesno(hx_diabetes.H7b, T, "Vous a t-on dit cela ces 12 derniers mois (H7b)"),
+    H8=yesno(hx_diabetes.H8, T, "Médicaments prescrits ces 2 dernières semaines pour le diabète (H8)"),
+    H9=yesno(hx_diabetes.H9, T, "Insuline prescrite pour le diabète (H9)"),
+    H10=yesno(hx_diabetes.H10, T, "Avez vous vu un tahua pour votre HTA (H10)"),
+    H11=yesno(hx_diabetes.H11, T, "Prenez vous un remède traditionnel pour votre HTA (H11)")
   )]
 )
 
@@ -4254,15 +4253,6 @@ tbl_svysummary(
     H10,
     H11
   ),
-  label = list(
-    H6 ~ "Glycémie déjà mesurée par un professionnel (H6) ",
-    H7a ~ "Un professionnel vous a dit que vous aviez du diabète (H7a)",
-    H7b ~ "Vous a t-on dit cela ces 12 derniers mois (H7b)",
-    H8 ~ "Médicaments prescrits ces 2 dernières semaines pour le diabète (H8)",
-    H9 ~ "Insuline prescrite pour le diabète (H9)",
-    H10 ~ "Avez vous vu un tahua pour votre HTA (H10)",
-    H11 ~ "Prenez vous un remède traditionnel pour votre HTA (H11)"
-  ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
 ) |>
@@ -4272,7 +4262,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -4293,12 +4285,12 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    H12=yesno(hx_chol.H12, T),
-    H13a=yesno(hx_chol.H13a, T),
-    H13b=yesno(hx_chol.H13b, T),
-    H14=yesno(hx_chol.H14, T),
-    H15=yesno(hx_chol.H15, T),
-    H16=yesno(hx_chol.H16, T)
+    H12=yesno(hx_chol.H12, T, "Cholestérol déjà mesurée par un professionnel (H12)"),
+    H13a=yesno(hx_chol.H13a, T, "Un professionnel vous a dit que vous aviez un cholestérol élevé (H13a)"),
+    H13b=yesno(hx_chol.H13b, T, "Vous a t-on dit cela ces 12 derniers mois (H13b)"),
+    H14=yesno(hx_chol.H14, T, "Médicaments prescrits ces 2 dernières semaines pour le cholestérol élevé (H14)"),
+    H15=yesno(hx_chol.H15, T, "Avez vous vu un tahua pour votre cholestérol élevé (H15)"),
+    H16=yesno(hx_chol.H16, T, "Prenez vous un remède traditionnel pour votre HTA (H16)")
   )]
 )
 
@@ -4312,14 +4304,6 @@ tbl_svysummary(
     H15,
     H16
   ),
-  label = list(
-    H12 ~ "Cholestérol déjà mesurée par un professionnel (H12) ",
-    H13a ~ "Un professionnel vous a dit que vous aviez un cholestérol élevé (H13a)",
-    H13b ~ "Vous a t-on dit cela ces 12 derniers mois (H13b)",
-    H14 ~ "Médicaments prescrits ces 2 dernières semaines pour le cholestérol élevé (H14)",
-    H15 ~ "Avez vous vu un tahua pour votre cholestérol élevé (H15)",
-    H16 ~ "Prenez vous un remède traditionnel pour votre HTA (H16)"
-  ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
 ) |>
@@ -4329,7 +4313,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -4350,7 +4336,7 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    H17=yesno(hx_cardiovascular.H17, T)
+    H17=yesno(hx_cardiovascular.H17, T, "Avez-vous déjà eu une crise cardiaque ou angine de poitrine ou AVC (H17)")
   )]
 )
 
@@ -4358,9 +4344,6 @@ tbl_svysummary(
   d,
   include = c(
     H17
-  ),
-  label = list(
-    H17 ~ "Avez-vous déjà eu une crise cardiaque ou angine de poitrine ou AVC (H17) "
   ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
@@ -4371,7 +4354,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -4392,14 +4377,14 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    H20=yesno(lifestyle_advice.H20, T),
-    H20a=yesno(lifestyle_advice.lifestyle.H20a, T),
-    H20b=yesno(lifestyle_advice.lifestyle.H20b, T),
-    H20c=yesno(lifestyle_advice.lifestyle.H20c, T),
-    H20d=yesno(lifestyle_advice.lifestyle.H20d, T),
-    H20e=yesno(lifestyle_advice.lifestyle.H20e, T),
-    H20f=yesno(lifestyle_advice.lifestyle.H20f, T),
-    H20g=yesno(lifestyle_advice.lifestyle.H20g, T)
+    H20=yesno(lifestyle_advice.H20, T, "A consulté un professionnel au cours des 12 derniers mois (H20)"),
+    H20a=yesno(lifestyle_advice.lifestyle.H20a, T, "Conseillé d'arrêter de fumer (H20a)"),
+    H20b=yesno(lifestyle_advice.lifestyle.H20b, T, "Conseillé de réduire la consommation de sel (H20b)"),
+    H20c=yesno(lifestyle_advice.lifestyle.H20c, T, "Conseillé de manger au moins 5 portions de frtuis et légumes par jour (H20c)"),
+    H20d=yesno(lifestyle_advice.lifestyle.H20d, T, "Conseillé de réduire la consommation de graisse (H20d)"),
+    H20e=yesno(lifestyle_advice.lifestyle.H20e, T, "Conseillé de commencer ou faire plus d'activités physiques (H20e)"),
+    H20f=yesno(lifestyle_advice.lifestyle.H20f, T, "Conseillé de maintenir un pods sain ou perdre du poids (H20f)"),
+    H20g=yesno(lifestyle_advice.lifestyle.H20g, T, "Conseillé de réduire la consommation de boissons sucrées (H20g)")
   )]
 )
 
@@ -4415,16 +4400,6 @@ tbl_svysummary(
     H20f,
     H20g
   ),
-  label = list(
-    H20 ~ "A consulté un professionnel au cours des 12 derniers mois (H20) ",
-    H20a ~ "Reçu conseil d'arrêter de fumer (H20a)",
-    H20b ~ "Reçu conseil de réduire la consommation de sel (H20b)",
-    H20c ~ "Reçu conseil de manger au moins 5 portions de frtuis et légumes par jour (H20c)",
-    H20d ~ "Reçu conseil de réduire la consommation de graisse (H20d)",
-    H20e ~ "Reçu conseil de commencer ou faire plus d'activités physiques (H20e)",
-    H20f ~ "Reçu conseil de maintenir un pods sain ou perdre du poids (H20f)",
-    H20g ~ "Reçu conseil de réduire la consommation de boissons sucrées (H20g)"
-  ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
 ) |>
@@ -4434,7 +4409,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
@@ -4455,16 +4432,13 @@ d <- survey::svydesign(
     agegr,
     bmigr,
     sexe,
-    var=yesno(lifestyle_advice.cervical_cancer.CX1, T)
+    var=yesno(lifestyle_advice.cervical_cancer.CX1, T, "Déjà eu un dépistage du cancer du col utérin (CX1)")
   )]
 )
 
 tbl_svysummary(
   d,
   include = var,
-  label = list(
-    var ~ "Déjà eu un dépistage du cancer du col utérin (CX1)"
-  ),
   statistic = list(all_categorical() ~ "{p}"),
   missing = "no"
 ) |>
@@ -4474,7 +4448,9 @@ tbl_svysummary(
     pattern = "{stat} ({ci})"
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
-  modify_footnote(update = everything() ~ NA)
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
 
