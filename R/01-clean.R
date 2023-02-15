@@ -234,7 +234,7 @@ steps[work=='-',work := NA]
 step2[, height := `height_weight:M11`]
 step2[, weight := `height_weight:M12`]
 
-step2[height>250, height := NA]
+step2[height>250 | height<110, height := NA]
 step2[weight>300, weight := NA]
 step2[, bmi := weight/(height/100)^2]
 

@@ -31,6 +31,7 @@ library(kableExtra)
 library(gtsummary)
 library(flextable)
 library(labelled)
+library(ggplot2)
 
 load(here('data/report.Rdata'))
 
@@ -319,7 +320,9 @@ tf <- survey::svydesign(
   weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
-                 !is.na(bmigr) & sex == "F", .(uid,
+                 !is.na(bmigr) &
+                 !is.na(bigbelly) & 
+                 sex == "F", .(uid,
                                                w2,
                                                gstratum,
                                                Age = agegr,
@@ -330,6 +333,7 @@ tf <- survey::svydesign(
   tbl_svysummary(
     include = c(bmigr),
     by = grosbide,
+    missing = 'no',
     label = grosbide ~ 'Obésité abdominale',
     statistic = list(all_categorical() ~ "{p}")
   ) |>
@@ -346,7 +350,9 @@ tm <- survey::svydesign(
   weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
-                 !is.na(bmigr) & sex == "M", .(uid,
+                 !is.na(bmigr) &
+                 !is.na(bigbelly) &
+                 sex == "M", .(uid,
                                                w2,
                                                gstratum,
                                                Age = agegr,
@@ -358,6 +364,7 @@ tm <- survey::svydesign(
   tbl_svysummary(
     include = c(bmigr),
     by = grosbide,
+    missing = 'no',
     label = grosbide ~ 'Obésité abdominale',
     statistic = list(all_categorical() ~ "{p}")
   ) |>
@@ -374,6 +381,7 @@ tt <- survey::svydesign(
   weights = ~ w2,
   strata = ~ gstratum + Age,
   data = steps[enroll == 1 &
+                 !is.na(bigbelly) &
                  !is.na(bmigr), .(uid,
                                   w2,
                                   gstratum,
@@ -401,6 +409,19 @@ tbl_merge(
     tab_spanner = c("**Femmes**", "**Hommes**", "**Total**")
 )
 
+
+```
+
+### Figure 2.1.1 Corrélation entre le tour de taille et l'IMC
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results = "asis", dev = 'png', fig_2.1.1}
+ggplot(data = steps[enroll==1,.(sexe, waist, bmi)], aes(waist, bmi, colour=sexe, alpha=I(.5))) + 
+  geom_point() +
+  xlab('Tour de taille (cm)') +
+  ylab('IMC') +
+  geom_smooth(method = 'lm') +
+  scale_color_brewer("Sexe", palette = "Set1") +
+  theme_bw()
 
 ```
 
