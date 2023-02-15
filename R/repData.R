@@ -26,11 +26,13 @@ load(here('data/steps.Rdata')) # loads latest pre-processed data
 
 # utility functions
 # recode 1=yes 2=no into 1=yes 0=no, with all other values reset to missing
-yesno <- function(x){
+yesno <- function(x, f=FALSE){
   x[x==2] <- 0
   x[x>1 | x<0] <- NA
+  if (f==TRUE) x <- factor(x, levels=1:0, labels = c('Oui','Non'))
   return(x)
 }
+
 
 # various frequency codes
 #
@@ -54,6 +56,19 @@ freq3b <- function(x) {
                 "Oui, beaucoup limité",
                 "Oui, un peu limité",
                 "Non, pas du tout limité"
+              ),
+              ordered = TRUE)
+  return(x)
+}
+
+
+freq3c <- function(x) {
+  x <- factor(x,
+              levels = 1:3,
+              labels = c(
+                "HTA",
+                "Diabète",
+                "Autres"
               ),
               ordered = TRUE)
   return(x)
@@ -321,6 +336,7 @@ steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Oui'))]
 save(yesno,
      freq3,
      freq3b,
+     freq3c,
      freq4,
      freq5,
      freq5b,

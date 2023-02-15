@@ -4163,3 +4163,362 @@ tbl_svysummary(d,
 
 ## 1.8 Antécédents
 
+### Tableau 1.8.1 Antécédents d'HTA (H1-H5)
+
+```{r tab_1_8_1}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    H1=yesno(hx_raised_bp.H1, T),
+    H2a=yesno(hx_raised_bp.H2a, T),
+    H2b=yesno(hx_raised_bp.H2b, T),
+    H3=yesno(hx_raised_bp.H3, T),
+    H4=yesno(hx_raised_bp.H4, T),
+    H5=yesno(hx_raised_bp.H5, T)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    H1,
+    H2a,
+    H2b,
+    H3,
+    H4,
+    H5
+  ),
+  label = list(
+    H1 ~ "TA déjà mesurée par un professionnel (H1) ",
+    H2a ~ "Un professionnel vous a dit que vous aviez une TA élevée (H2a)",
+    H2b ~ "Vous a t-on dit cela ces 12 derniers mois (H2b)",
+    H3 ~ "Médicaments prescrits ces 2 dernières semaines pour HTA (H3)",
+    H4 ~ "Avez vous vu un tahua pour votre HTA (H4)",
+    H5 ~ "Prenez vous un remède traditionnel pour votre HTA (H5)"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+### Tableau 1.8.2 Antécédents de diabète (H6-H11)
+
+```{r tab_1_8_2}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    H6=yesno(hx_diabetes.H6, T),
+    H7a=yesno(hx_diabetes.H7a, T),
+    H7b=yesno(hx_diabetes.H7b, T),
+    H8=yesno(hx_diabetes.H8, T),
+    H9=yesno(hx_diabetes.H9, T),
+    H10=yesno(hx_diabetes.H10, T),
+    H11=yesno(hx_diabetes.H11, T)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    H6,
+    H7a,
+    H7b,
+    H8,
+    H9,
+    H10,
+    H11
+  ),
+  label = list(
+    H6 ~ "Glycémie déjà mesurée par un professionnel (H6) ",
+    H7a ~ "Un professionnel vous a dit que vous aviez du diabète (H7a)",
+    H7b ~ "Vous a t-on dit cela ces 12 derniers mois (H7b)",
+    H8 ~ "Médicaments prescrits ces 2 dernières semaines pour le diabète (H8)",
+    H9 ~ "Insuline prescrite pour le diabète (H9)",
+    H10 ~ "Avez vous vu un tahua pour votre HTA (H10)",
+    H11 ~ "Prenez vous un remède traditionnel pour votre HTA (H11)"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+
+### Tableau 1.8.3 Antécédents d'hypercholestérolémie (H12-H16)
+
+```{r tab_1_8_3}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    H12=yesno(hx_chol.H12, T),
+    H13a=yesno(hx_chol.H13a, T),
+    H13b=yesno(hx_chol.H13b, T),
+    H14=yesno(hx_chol.H14, T),
+    H15=yesno(hx_chol.H15, T),
+    H16=yesno(hx_chol.H16, T)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    H12,
+    H13a,
+    H13b,
+    H14,
+    H15,
+    H16
+  ),
+  label = list(
+    H12 ~ "Cholestérol déjà mesurée par un professionnel (H12) ",
+    H13a ~ "Un professionnel vous a dit que vous aviez un cholestérol élevé (H13a)",
+    H13b ~ "Vous a t-on dit cela ces 12 derniers mois (H13b)",
+    H14 ~ "Médicaments prescrits ces 2 dernières semaines pour le cholestérol élevé (H14)",
+    H15 ~ "Avez vous vu un tahua pour votre cholestérol élevé (H15)",
+    H16 ~ "Prenez vous un remède traditionnel pour votre HTA (H16)"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+
+### Tableau 1.8.4 Antécédents cardiovasculaires (H17)
+
+```{r tab_1_8_4}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    H17=yesno(hx_cardiovascular.H17, T)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    H17
+  ),
+  label = list(
+    H17 ~ "Avez-vous déjà eu une crise cardiaque ou angine de poitrine ou AVC (H17) "
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+
+### Tableau 1.8.5 Conseils pour le mode de vie (H20, H20a-H20g)
+
+```{r tab_1_8_5}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    H20=yesno(lifestyle_advice.H20, T),
+    H20a=yesno(lifestyle_advice.lifestyle.H20a, T),
+    H20b=yesno(lifestyle_advice.lifestyle.H20b, T),
+    H20c=yesno(lifestyle_advice.lifestyle.H20c, T),
+    H20d=yesno(lifestyle_advice.lifestyle.H20d, T),
+    H20e=yesno(lifestyle_advice.lifestyle.H20e, T),
+    H20f=yesno(lifestyle_advice.lifestyle.H20f, T),
+    H20g=yesno(lifestyle_advice.lifestyle.H20g, T)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    H20,
+    H20a,
+    H20b,
+    H20c,
+    H20d,
+    H20e,
+    H20f,
+    H20g
+  ),
+  label = list(
+    H20 ~ "A consulté un professionnel au cours des 12 derniers mois (H20) ",
+    H20a ~ "Reçu conseil d'arrêter de fumer (H20a)",
+    H20b ~ "Reçu conseil de réduire la consommation de sel (H20b)",
+    H20c ~ "Reçu conseil de manger au moins 5 portions de frtuis et légumes par jour (H20c)",
+    H20d ~ "Reçu conseil de réduire la consommation de graisse (H20d)",
+    H20e ~ "Reçu conseil de commencer ou faire plus d'activités physiques (H20e)",
+    H20f ~ "Reçu conseil de maintenir un pods sain ou perdre du poids (H20f)",
+    H20g ~ "Reçu conseil de réduire la consommation de boissons sucrées (H20g)"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+
+
+### Tableau 1.8.6 Dépistage du cancer du col utérin (CX1)
+
+```{r tab_1_8_6}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 & sex == "F", .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var=yesno(lifestyle_advice.cervical_cancer.CX1, T)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = var,
+  label = list(
+    var ~ "Déjà eu un dépistage du cancer du col utérin (CX1)"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
+### Tableau 1.8.7 Longue maladie (X26-X27)
+
+```{r tab_1_8_7}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    X26=yesno(lifestyle_advice.Long_Illness.X26, T),
+    X27=freq3c(lifestyle_advice.Long_Illness.X27)
+  )]
+)
+
+tbl_svysummary(
+  d,
+  include = c(
+    X26,
+    X27
+  ),
+  label = list(
+    X26 ~ "Etes-vous en longue maladie (X26)",
+    X27 ~ "Laquelle (X27)"
+  ),
+  statistic = list(all_categorical() ~ "{p}"),
+  missing = "no"
+) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    statistic = list(all_dichotomous() ~ "{conf.low} - {conf.high}"),
+    pattern = "{stat} ({ci})"
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+
