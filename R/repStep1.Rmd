@@ -473,7 +473,7 @@ d <- survey::svydesign(
   weights = ~ w1,
   strata = ~ gstratum + agegr,
   data = steps[enroll == 1 & tobacco.T2==1 &
-                 !is.na(tobacco.T7), .(uid,
+                 tobacco.T7<3, .(uid,
                                     w1,
                                     gstratum,
                                     agegr,
@@ -498,8 +498,8 @@ tbl_svysummary(d,
   remove_row_type(type='level', level_value = 'Non') |>
   remove_row_type(type='header')
 
-
 ```
+
 ### Tableau 1.1.9b Un professionnel conseille d'arrêter de fumer lors des 12 derniers mois, par âge et sexe (T7)
 ```{r tab_1_1_9b}
 tab <- svyby( ~ t7, ~ agegr + sexe, d, svymean, vartype = c("ci"))
