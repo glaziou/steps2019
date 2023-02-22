@@ -26,5 +26,5 @@ source('R/repMaster.R°)
 This script runs the following sequence:
 - preprocess raw data
 - creates and loads utility functions and cleaned report data
-- generate an html page describing the sample (in folder html)
-- generate 3 html pages for each of Step 1, 2 and 3
+- generate 1 html page describing the sample (in folder html)
+- generate 2 html pages (in folder html): (i) step 1, (ii) steps 2 and 3

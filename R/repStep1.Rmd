@@ -40,7 +40,7 @@ theme_gtsummary_journal('lancet')
 
 ## 1.1 Tabac 
 
-### Tableau 1.1.1a Fumeurs de produits à base de tabac (T1)
+### Tableau 1.1.1a Fumeurs de produits à base de tabac (Question T1)
 ```{r tab_1_1_1a}
 d <- survey::svydesign(
   id = ~ uid,
@@ -75,11 +75,30 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.1.1b Fumeurs, par âge et sexe (T1)
+### Tableau 1.1.1b Fumeurs, par âge (T1)
 ```{r tab_1_1_1b}
+tab <- svyby( ~ t1, ~ agegr, d, svymean, vartype = c("ci"))
+tab[, 2:4] <- round(tab[, 2:4] * 100)
+names(tab) <- c('Age', 'fumeur', 'lo', 'hi')
+tab$ic <- paste0(tab$fumeur, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[5] <- "Fumeur (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1, 5)]
+gt::gt(tab) |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+### Tableau 1.1.1c Fumeurs, par âge et sexe (T1)
+```{r tab_1_1_1c}
 tab <- svyby( ~ t1, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
-names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+names(tab) <- c('Age', 'Sexe', 'fumeur', 'lo', 'hi')
 tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
 names(tab)[6] <- "Fumeur (IC 95%)"
 rownames(tab) <- NULL
@@ -94,14 +113,13 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 ```
 
-### Tableau 1.1.2a Fumeurs quotidiens (T2)
+### Tableau 1.1.2a Fumeurs quotidiens, parmi les fumeurs (T2)
 ```{r tab_1_1_2a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
   strata = ~ gstratum + agegr,
-  data = steps[enroll == 1 &
-                 !is.na(tobacco.T2), .(uid,
+  data = steps[enroll == 1, .(uid,
                                     w1,
                                     gstratum,
                                     agegr,
@@ -113,6 +131,7 @@ d <- survey::svydesign(
 
 tbl_svysummary(d,
                include = c(T2),
+               missing = "no",
                label = list(T2 ~ "Fumeur quotidien"),
                statistic = list(all_categorical() ~ "{p}")) |>
   modify_header(label ~ "") |>

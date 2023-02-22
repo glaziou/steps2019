@@ -200,7 +200,7 @@ survey::svydesign(id = ~ uid,
 
 
 
-### Tableau 2.1.6a Prévalence du surpoids
+### Tableau 2.1.6a Prévalence du surpoids (IMC \u226525)
 
 ```{r tab_2_1_6a}
 d <- survey::svydesign(
@@ -255,7 +255,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 2.1.7a Prévalence de l'obésité
+### Tableau 2.1.7a Prévalence de l'obésité (IMC \u226530)
 
 ```{r tab_2_1_7a}
 d <- survey::svydesign(
@@ -694,6 +694,94 @@ t2 <- tbl_regression(m,
   modify_header(update = list(estimate ~ "**aOR (IC 95%)**")) |>
   modify_footnote(estimate = "aOR = rapport de cotes ajusté", abbreviation = TRUE) |>
 #  add_global_p() |>
+  add_significance_stars(
+    hide_se = TRUE,
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+# modify_footnote(everything() ~ NA, abbreviation = TRUE)
+
+tbl_merge(
+  tbls        = list(t1, t2),
+  tab_spanner = c("**Analyse univariée**", "**Analyse multivariée**")
+)
+
+```
+
+
+## 2.4 Excrétion de sel
+
+## Tableau 2.4.1 Excrétion urinaire de sel (sous-échantillon non représentatif limité aux résidents de  Tahiti, n=828)
+
+```{r tab_2_4_1a}
+d <- steps[enroll == 1 &
+             !is.na(abnormal.salt), .(
+               agegr,
+               bmigr,
+               sexe,
+               abnormal.salt,
+               Age = agegr,
+               Education = edu,
+               HTA,
+               Obese,
+               Diabete,
+               S = factor(
+                 abnormal.salt,
+                 levels = 1:0,
+                 labels = c('Excrétion de sel anormale', 'Normale')
+               )
+             )]
+
+tbl_summary(d,
+               include = c(S),
+               label = list(S ~ "Excrétion de sel"),
+               missing = 'no',
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |> 
+  remove_row_type(type='level', level_value = 'Normale') |>
+  remove_row_type(type='header')
+
+```
+
+
+
+### Tableau 2.4.2 Facteurs de risque d'une excrétion urinaire anormale de sel (analyse uni- et multivariée)
+
+```{r tab_2_4_2}
+t1 <- tbl_uvregression(data = d,
+    method = glm,
+    label = list(sexe ~ "Sexe", Obese ~ "Obésité", S ~ "Excrétion sel anormale"),
+    include = c('sexe','Age','Obese','HTA','Diabete'),
+    hide_n = TRUE,
+    y = S,
+    method.args = list(family = quasibinomial),
+    exponentiate = TRUE
+  ) |>
+  modify_header(update = list(estimate ~ "**OR (IC 95%)**")) |>
+  modify_footnote(estimate = "OR = rapport de cotes, IC = intervalle de confiance", abbreviation = TRUE) |>
+  add_significance_stars(hide_se = TRUE,
+                         hide_p = FALSE,
+                         pattern = "{p.value}{stars}")
+
+m <-
+  glm(
+    S ~ sexe + Age + Obese + HTA + Diabete,
+    data = d,
+    family = "quasibinomial"
+  )
+
+t2 <- tbl_regression(m,
+               label = list(sexe ~ "Sexe", Obese ~ "Obésité"),
+               exponentiate = TRUE) |>
+  modify_header(update = list(estimate ~ "**aOR (IC 95%)**")) |>
+  modify_footnote(estimate = "aOR = rapport de cotes ajusté", abbreviation = TRUE) |>
   add_significance_stars(
     hide_se = TRUE,
     hide_p = FALSE,

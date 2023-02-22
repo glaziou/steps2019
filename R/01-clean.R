@@ -359,8 +359,9 @@ steps[!is.na(glycemie), diabete := 0]
 steps[glycemie > 110, diabete := 1]
 steps[sex == 'M', salt := 23.51 + 0.45*sodium - 3.09*creat + 4.16*bmi + 0.22*age]
 steps[sex == 'F', salt := 3.74 + 0.33*sodium - 2.44*creat + 2.42*bmi + 2.34*age - 0.03*age^2]
-steps[!is.na(salt), normal.salt := 0]
-steps[salt > 2 & salt < 5, normal.salt := 1]
+steps[, salt.g := salt / 17.1]
+steps[!is.na(salt.g), abnormal.salt := 1]
+steps[salt.g > 2 & salt.g < 5, abnormal.salt := 0]
 
 
 # simplify varnames
@@ -411,6 +412,8 @@ steps[alcweek.A10d %in% c(77), alcweek.A10d := NA]
 steps[alcweek.A10e %in% c(77), alcweek.A10e := NA]
 steps[alcweek.A10f %in% c(77), alcweek.A10f := NA]
 steps[alcweek.A10g %in% c(77), alcweek.A10g := NA]
+
+
 
 
 

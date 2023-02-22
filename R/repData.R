@@ -269,7 +269,7 @@ qcm <- function(x, value=1, value.lab='Oui') {
 
 
 steps[enroll == 1, inclus := 'Inclus']
-steps[enroll == 0, inclus := 'Exclus']
+steps[enroll == 0, inclus := 'Manquant']
 
 # sample size by stratum
 (a1 <-
@@ -309,7 +309,7 @@ steps[, gstratum := factor(gstratum,
                            labels=c('Iles du vent','Iles sous le vent','Autres archipels'))]
 steps[, grosbide := factor(bigbelly, levels=0:1, labels=c('Non','Obésité abdominale'))]
 steps[, Surpoids := factor(overweight, levels=0:1, labels=c('Non','Surpoids'))]
-steps[, Obese := factor(obese, levels=0:1, labels=c('Non','Obèsité'))]
+steps[, Obese := factor(obese, levels=0:1, labels=c('Non','Obésité'))]
 steps[, HTA := factor(hta, levels=0:1, labels=c('Non','HTA'))]
 steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Diabète'))]
 
