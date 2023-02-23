@@ -60,18 +60,21 @@ Les tableaux suivants montrent ces indicateurs ajustés pour prendre en compte l
 ### Tableau 2.1.1 Corpulence
 
 ```{r tab_2_1_1}
-survey::svydesign(id = ~ uid,
-                  weights = ~ w2,
-                  strata = ~gstratum + agegr,
-                  data = steps[enroll == 1 &
-                                 !is.na(bmigr), .(uid,
-                                                  w2,
-                                                  gstratum,
-                                                  agegr,
-                                                  bmigr)]) |>
-  
-  tbl_svysummary(include = c(bmigr),
-                 statistic = list(all_categorical() ~ "{p}")) |>
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w2,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr), .(uid,
+                                  w2,
+                                  gstratum,
+                                  agegr,
+                                  bmigr)]
+)
+
+t211 <- tbl_svysummary(d,
+               include = c(bmigr),
+               statistic = list(all_categorical() ~ "{p}")) |>
   modify_header(label ~ "") |>
   add_ci(
     pattern = "{stat} ({ci})",
@@ -79,6 +82,10 @@ survey::svydesign(id = ~ uid,
   )  |>
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels()
+
+print(t211)
+# as_gt(t211) |> gt::gtsave(filename = here("output/t211.rtf"))
+# as_gt(t211) |> gt::gtsave(filename = here("output/t211.docx"))
 
 ```
 

@@ -119,7 +119,7 @@ d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
   strata = ~ gstratum + agegr,
-  data = steps[enroll == 1, .(uid,
+  data = steps[enroll == 1 & !is.na(tobacco.T2), .(uid,
                                     w1,
                                     gstratum,
                                     agegr,
