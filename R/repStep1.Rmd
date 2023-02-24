@@ -99,7 +99,7 @@ gt::gt(tab) |>
 tab <- svyby( ~ t1, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
 names(tab) <- c('Age', 'Sexe', 'fumeur', 'lo', 'hi')
-tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+tab$gros <- paste0(tab$fumeur, ' (', tab$lo, ' - ', tab$hi, ')')
 names(tab)[6] <- "Fumeur (IC 95%)"
 rownames(tab) <- NULL
 tab <- tab[, c(1:2, 6)]
