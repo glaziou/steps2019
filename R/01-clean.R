@@ -352,6 +352,7 @@ steps[, sum(!is.na(creat)), by=gstratum]
 
 
 # add calculated variables
+#
 steps[!is.na(waist), bigbelly := 0]
 steps[waist >= 88 & sex=='F', bigbelly := 1]
 steps[waist >= 102 & sex=='M', bigbelly := 1]
@@ -413,6 +414,24 @@ steps[alcweek.A10e %in% c(77), alcweek.A10e := NA]
 steps[alcweek.A10f %in% c(77), alcweek.A10f := NA]
 steps[alcweek.A10g %in% c(77), alcweek.A10g := NA]
 
+
+# alcohol grams per day over the past 30 days
+steps[A6 < 77 & A7 < 77, alc.gpd := A6 * A7 / 3]
+# 3 WHO groups of alcohol consumption (30 days) (1 = yes, 2 = no)
+steps[alc.gpd >= 40, alc.cat1 := 2]
+steps[alc.gpd < 40, alc.cat1 := 1]
+
+steps[alc.gpd < 40 | alc.gpd >= 60, alc.cat2 := 2]
+steps[alc.cat1==2 & alc.gpd < 60, alc.cat2 := 1]
+
+steps[alc.gpd < 60, alc.cat3 := 2]
+steps[alc.gpd >= 60, alc.cat3 := 1]
+
+# alcohol grams per day over the past 7 days (1 = yes, 2 = no)
+steps[, alc.gpd7 := (
+  alcweek.A10a + alcweek.A10b + alcweek.A10c + alcweek.A10d + alcweek.A10e +
+    alcweek.A10f + alcweek.A10g
+) / .7] 
 
 
 

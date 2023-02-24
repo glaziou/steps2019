@@ -1556,9 +1556,229 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.8a Au cours des 30 derniers jours, plus grand nombre de verres d'alcool bus en une fois (A8)
+### Tableau 1.3.8a Consommation d'alcool en g/j au cours des 30 derniers jours
 
 ```{r tab_1_3_8a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(alc.gpd) & alc.gpd != 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          alc.gpd)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(alc.gpd),
+  missing = 'no',
+  label = list(alc.gpd ~ "Grammes par jour"),
+  statistic = list(alc.gpd ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.3.8b Consommation d'alcool en g/j au cours des 30 derniers jours, par âge et sexe 
+```{r tab_1_3_8b}
+tab <- svyby( ~ alc.gpd, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Grammes par jour (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.3.9a Pourcentage de la population en catégorie II (OMS, consommation d'alcool ces 30 derniers jours comprise entre 40 et 60 g/j)
+
+```{r tab_1_3_9a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(alc.cat2), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    var = yesno(alc.cat2),
+                                    Var = yesno(alc.cat2, T, "Catégorie II"))]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Catégorie II (OMS)"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+
+
+### Tableau 1.3.9b Pourcentage de la population en catégorie II (OMS), par âge et sexe
+
+```{r tab_1_3_9b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Consommé de l'alcool ces 12 derniers mois (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.3.10a Pourcentage de la population en catégorie III (OMS, consommation d'alcool ces 30 derniers jours supérieure à 60 g/j)
+
+```{r tab_1_3_10a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(alc.cat2), .(uid,
+                                    w1,
+                                    gstratum,
+                                    agegr,
+                                    bmigr,
+                                    sexe,
+                                    var = yesno(alc.cat3),
+                                    Var = yesno(alc.cat3, T, "Catégorie III"))]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Catégorie III (OMS)"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+
+
+### Tableau 1.3.10b Pourcentage de la population en catégorie III (OMS), par âge et sexe
+
+```{r tab_1_3_10b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Catégorie III (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.3.11a Consommation d'alcool en g/j au cours des 7 derniers jours
+
+```{r tab_1_3_11a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(alc.gpd7) & alc.gpd7 != 77, .(uid,
+                                          w1,
+                                          gstratum,
+                                          agegr,
+                                          bmigr,
+                                          sexe,
+                                          alc.gpd7)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(alc.gpd7),
+  missing = 'no',
+  label = list(alc.gpd7 ~ "Grammes par jour"),
+  statistic = list(alc.gpd7 ~ "{mean}")
+) |>
+  modify_header(label ~ "") |>
+  add_ci(pattern = "{stat} ({ci})") |>
+  modify_header(stat_0 = "**Moyenne (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA)
+
+```
+
+### Tableau 1.3.11b Consommation d'alcool en g/j au cours des 7 derniers jours, par âge et sexe 
+```{r tab_1_3_11b}
+tab <- svyby( ~ alc.gpd7, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5],1)
+names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
+tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Grammes par jour (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.3.12a Au cours des 30 derniers jours, plus grand nombre de verres d'alcool bus en une fois (A8)
+
+```{r tab_1_3_12a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -1587,8 +1807,9 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.8b Plus grand nombre de verres en une fois, par âge et sexe (A8)
-```{r tab_1_3_8b}
+### Tableau 1.3.12b Plus grand nombre de verres en une fois, par âge et sexe (A8)
+
+```{r tab_1_3_12b}
 tab <- svyby( ~ A8, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
 names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
@@ -1608,9 +1829,9 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.9a Au cours des 30 derniers jours, nombre de fois au moins 6 verres d'alcool ont été bus en une occasion (A9)
+### Tableau 1.3.13a Au cours des 30 derniers jours, nombre de fois au moins 6 verres d'alcool ont été bus en une occasion (A9)
 
-```{r tab_1_3_9a}
+```{r tab_1_3_13a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -1639,8 +1860,9 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.9b Nombre de fois au moins 6 verres, par âge et sexe (A9)
-```{r tab_1_3_9b}
+### Tableau 1.3.13b Nombre de fois au moins 6 verres, par âge et sexe (A9)
+
+```{r tab_1_3_13b}
 tab <- svyby( ~ A9, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
 names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
@@ -1660,9 +1882,9 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.3.10a Au cours des 7 derniers jours, nombre de verres d'alcool ont été bus par jour (A10)
+### Tableau 1.3.14a Au cours des 7 derniers jours, nombre de verres d'alcool ont été bus par jour (A10)
 
-```{r tab_1_3_10a}
+```{r tab_1_3_14a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -1704,8 +1926,8 @@ tbl_svysummary(
 
 ```
 
-### Tableau 1.3.10b Nombre de verres, par sexe (A10)
-```{r tab_1_3_10b}
+### Tableau 1.3.14b Nombre de verres, par sexe (A10)
+```{r tab_1_3_14b}
 tbl_svysummary(
   d,
   include = c(Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche),
@@ -1724,8 +1946,8 @@ tbl_svysummary(
 ```
 
 
-### Tableau 1.3.10c Nombre de verres, par groupe d'âge (A10)
-```{r tab_1_3_10c}
+### Tableau 1.3.14c Nombre de verres, par groupe d'âge (A10)
+```{r tab_1_3_14c}
 tbl_svysummary(
   d,
   include = c(Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche),
@@ -1745,8 +1967,9 @@ tbl_svysummary(
 
 
 
-### Tablean 1.3.11a Problèmes de famille à cause de l'alcool au cours des 12 derniers mois (A16)
-```{r tab_1_3_11a}
+### Tablean 1.3.15a Problèmes de famille à cause de l'alcool au cours des 12 derniers mois (A16)
+
+```{r tab_1_3_15a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -1776,8 +1999,9 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.11b Fréquence, par sexe (A16)
-```{r tab_1_3_11b}
+### Tableau 1.3.15b Fréquence, par sexe (A16)
+
+```{r tab_1_3_15b}
 tbl_svysummary(d,
                include = c(A16, sexe),
                label = list(A16 ~ "Fréquence des problèmes"),
@@ -1794,8 +2018,9 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.3.11c Fréquence, par âge (A16)
-```{r tab_1_3_11c}
+### Tableau 1.3.15c Fréquence, par âge (A16)
+
+```{r tab_1_3_15c}
 tbl_svysummary(d,
                include = c(A16, agegr),
                label = list(A16 ~ "Fréquence des problèmes"),

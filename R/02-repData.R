@@ -237,12 +237,30 @@ lohi <- function(ev, sd) {
   return(c(lo = lo, hi = hi))
 }
 
-# simulate quantiles of a difference in proportions
-dprop <- function(ev1, sd1, ev2, sd2, nsim = 1e5) {
-  par1 <- get.beta(ev1, sd1)
-  par2 <- get.beta(ev2, sd2)
+# simulate quantiles of a difference in percentages
+dprop <- function(ev1, lo1, hi1, ev2, lo2, hi2, nsim = 1e5) {
+  sd1 <- (hi1 - lo1) / 3.92 
+  sd2 <- (hi2 - lo2) / 3.92 
+  par1 <- get.beta(ev1/100, sd1/100)
+  par2 <- get.beta(ev2/100, sd2/100)
   s1 <- rbeta(nsim, par1[[1]], par1[[2]])
   s2 <- rbeta(nsim, par2[[1]], par2[[2]])
+  d <- s2 - s1
+  out <-
+    c(
+      mean.diff = mean(d)*100,
+      lo = quantile(d, 0.025)*100,
+      hi = quantile(d, 0.975)*100
+    )
+  return(out)
+}
+
+# simulate quantiles of a difference in means (assume normal distributions)
+dmean <- function(ev1, lo1, hi1, ev2, lo2, hi2, nsim = 1e5) {
+  sd1 <- (hi1 - lo1) / 3.92
+  sd2 <- (hi2 - lo2) / 3.92
+  s1 <- rnorm(nsim, ev1, sd1)
+  s2 <- rnorm(nsim, ev2, sd2)
   d <- s2 - s1
   out <-
     c(
@@ -252,7 +270,6 @@ dprop <- function(ev1, sd1, ev2, sd2, nsim = 1e5) {
     )
   return(out)
 }
-
 
 
 # splits multichoice questions

@@ -23,7 +23,7 @@ library(rmarkdown)
 
 
 # load datasets and utility functions
-source(here('R/repData.R'))
+load('data/report.Rdata')
 
 
 # generate html pages for each step

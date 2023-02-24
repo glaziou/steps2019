@@ -21,10 +21,13 @@
 ## Report generation
 In an R console, type:
 
-source('R/repMaster.R°)
-
+source('R/02-repData.R')
 This script runs the following sequence:
 - preprocess raw data
 - creates and loads utility functions and cleaned report data
+
+source('R/03-repMaster.R°)
+This script runs the following sequence:
+- load report data and utility functions
 - generate 1 html page describing the sample (in folder html)
 - generate 2 html pages (in folder html): (i) step 1, (ii) steps 2 and 3
