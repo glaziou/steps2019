@@ -433,6 +433,11 @@ steps[, alc.gpd7 := (
     alcweek.A10f + alcweek.A10g
 ) / .7] 
 
+# fruits and veggies
+steps[diet.fruits_serv.D2 < 77 & diet.vegetables_serv.D4 < 77, 
+      fruitveg := diet.fruits_serv.D2 + diet.vegetables_serv.D4]
+steps[fruitveg >= 5, fruitveg5 := 1]
+steps[fruitveg < 5, fruitveg5 := 0]
 
 
 

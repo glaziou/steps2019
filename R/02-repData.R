@@ -329,6 +329,7 @@ steps[, Surpoids := factor(overweight, levels=0:1, labels=c('Non','Surpoids'))]
 steps[, Obese := factor(obese, levels=0:1, labels=c('Non','Obésité'))]
 steps[, HTA := factor(hta, levels=0:1, labels=c('Non','HTA'))]
 steps[, Diabete := factor(diabete, levels=0:1, labels=c('Non','Diabète'))]
+steps[, fruitleg5 := factor(fruitveg5, levels=0:1, labels=c('Moins de 5 portions','Au moins 5 portions'))]
 
 
 # # missed individuals

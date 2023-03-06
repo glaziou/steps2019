@@ -905,8 +905,28 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.2.3b Fumeurs, par âge et sexe (X4)
+### Tableau 1.2.3b Fumeurs, par sexe (X4)
 ```{r tab_1_2_3b}
+tab <- svyby( ~ x4, ~ sexe, d, svymean, vartype = c("ci"))
+tab[, 2:4] <- round(tab[, 2:4] * 100)
+names(tab) <- c('Sexe', 'Fumeur', 'lo', 'hi')
+tab$gros <- paste0(tab$Fumeur, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[5] <- "Fumeur (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1, 5)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.2.3c Fumeurs, par âge et sexe (X4)
+```{r tab_1_2_3c}
 tab <- svyby( ~ x4, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
 names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
@@ -2151,8 +2171,6 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-
-
 ### Tableau 1.4.3 Raisons de ne pas consommer plus de fruits (X8)
 
 ```{r tab_1_4_3}
@@ -2369,9 +2387,47 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tablean 1.4.7a Ajouter du sel ou sauce de soja en mangeant (avant ou pendant) (D5)
 
-```{r tab_1_4_7a}
+### Tableau 1.4.7 Consommation de fruits et légumes: au moins 5 portions par jour
+
+```{r tab_1_4_7}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w2,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1 &
+                 !is.na(bmigr), .(uid,
+                                  w2,
+                                  gstratum,
+                                  agegr,
+                                  bmigr,
+                                  overweight,
+                                  sexe,
+                                  var = fruitleg5)]
+)
+
+tbl_svysummary(d,
+               include = c(var),
+               missing = 'no',
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels() |>
+  remove_row_type(type='level', level_value = 'Moins de 5 portions') |>
+  remove_row_type(type='header')
+
+```
+
+
+
+
+### Tablean 1.4.8a Ajouter du sel ou sauce de soja en mangeant (avant ou pendant) (D5)
+
+```{r tab_1_4_8a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -2401,8 +2457,8 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.7b Fréquence, par sexe (D5)
-```{r tab_1_4_7b}
+### Tableau 1.4.8b Fréquence, par sexe (D5)
+```{r tab_1_4_8b}
 tbl_svysummary(d,
                include = c(D5, sexe),
                missing = "no",
@@ -2423,9 +2479,9 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.4.8a Ajouter du sel ou sauce de soja en faisant la cuisine (D6)
+### Tablean 1.4.9a Ajouter du sel ou sauce de soja en faisant la cuisine (D6)
 
-```{r tab_1_4_8a}
+```{r tab_1_4_9a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -2455,8 +2511,8 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.8b Fréquence, par sexe (D6)
-```{r tab_1_4_8b}
+### Tableau 1.4.9b Fréquence, par sexe (D6)
+```{r tab_1_4_9b}
 tbl_svysummary(d,
                include = c(D6, sexe),
                missing = "no",
@@ -2476,9 +2532,9 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.4.9a Manger des aliments riches en sel (D7)
+### Tablean 1.4.10a Manger des aliments riches en sel (D7)
 
-```{r tab_1_4_9a}
+```{r tab_1_4_10a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -2508,8 +2564,8 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.9b Fréquence, par sexe (D7)
-```{r tab_1_4_9b}
+### Tableau 1.4.10b Fréquence, par sexe (D7)
+```{r tab_1_4_10b}
 tbl_svysummary(d,
                include = c(D7, sexe),
                missing = "no",
@@ -2529,9 +2585,9 @@ tbl_svysummary(d,
 
 
 
-### Tablean 1.4.10a Quantité de sel consommée (D8)
+### Tablean 1.4.11a Quantité de sel consommée (D8)
 
-```{r tab_1_4_10a}
+```{r tab_1_4_11a}
 d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w1,
@@ -2561,8 +2617,8 @@ tbl_svysummary(d,
 
 ```
 
-### Tableau 1.4.10b Quantité de sel, par sexe (D8)
-```{r tab_1_4_10b}
+### Tableau 1.4.11b Quantité de sel, par sexe (D8)
+```{r tab_1_4_11b}
 tbl_svysummary(d,
                include = c(D8, sexe),
                missing = "no",
@@ -2700,7 +2756,7 @@ d <- survey::svydesign(
 tbl_svysummary(
   d,
   include = c(X11),
-  label = list(X11 ~ "Nombre de portions"),
+  label = list(X11 ~ "Nombre de verres"),
   type = list(X11 ~ 'continuous'),
   statistic = list(X11 ~ "{mean}")
 ) |>
@@ -2719,7 +2775,7 @@ tab <- svyby( ~ X11, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5],1)
 names(tab) <- c('Age', 'Sexe', 'Age1', 'lo', 'hi')
 tab$gros <- paste0(tab$Age1, ' (', tab$lo, ' - ', tab$hi, ')')
-names(tab)[6] <- "Nombre de portions (IC 95%)"
+names(tab)[6] <- "Nombre de verres (IC 95%)"
 rownames(tab) <- NULL
 tab <- tab[, c(1:2, 6)]
 gt::gt(tab, groupname_col = 'Sexe') |> 
