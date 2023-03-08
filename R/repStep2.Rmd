@@ -280,6 +280,7 @@ d <- survey::svydesign(
                                   obese,
                                   Obese)]
 )
+
 tbl_svysummary(
   d,
   include = c(Obese),
@@ -297,11 +298,30 @@ tbl_svysummary(
   remove_row_type(type='header')
 
 ```
-
-
-### Tableau 2.1.7b Prévalence de l'obésité par âge et sexe
+### Tableau 2.1.7b Prévalence de l'obésité par sexe
 
 ```{r tab_2_1_7b}
+tab <- svyby( ~ obese, ~ sexe, d, svymean, vartype = c("ci"))
+tab[, 2:4] <- round(tab[, 2:4] * 100)
+names(tab) <- c('Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[5] <- "Obésité (IC95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1, 5)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 2.1.7c Prévalence de l'obésité par âge et sexe
+
+```{r tab_2_1_7c}
 tab <- svyby( ~ obese, ~ agegr + sexe, d, svymean, vartype = c("ci"))
 tab[, 3:5] <- round(tab[, 3:5] * 100)
 names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
@@ -317,112 +337,186 @@ gt::gt(tab, groupname_col = 'Sexe') |>
      )
    )
 
-
 ```
 
 
 
 
 
-### Tableau 2.1.8 Obésité abdominale
+### Tableau 2.1.8a Prévalence de l'obésité abdominale
 
-```{r tab_2_1_8}
-tf <- survey::svydesign(
+```{r tab_2_1_8a}
+d <- survey::svydesign(
   id = ~ uid,
   weights = ~ w2,
-  strata = ~ gstratum + Age,
+  strata = ~ gstratum + agegr,
   data = steps[enroll == 1 &
-                 !is.na(bmigr) &
-                 !is.na(bigbelly) & 
-                 sex == "F", .(uid,
-                                               w2,
-                                               gstratum,
-                                               Age = agegr,
-                                               bmigr,
-                                               sexe,
-                                               grosbide)]
-) |>
-  tbl_svysummary(
-    include = c(bmigr),
-    by = grosbide,
-    missing = 'no',
-    label = grosbide ~ 'Obésité abdominale',
-    statistic = list(all_categorical() ~ "{p}")
-  ) |>
-  modify_header(label ~ "**Obésité abdominale**") |>
-  add_ci(
-    pattern = "{stat} ({ci})",
-    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
-  )  |>
-  modify_header(all_stat_cols() ~ "**{level}**") |>
-  bold_labels()
-
-tm <- survey::svydesign(
-  id = ~ uid,
-  weights = ~ w2,
-  strata = ~ gstratum + Age,
-  data = steps[enroll == 1 &
-                 !is.na(bmigr) &
-                 !is.na(bigbelly) &
-                 sex == "M", .(uid,
-                                               w2,
-                                               gstratum,
-                                               Age = agegr,
-                                               bmigr,
-                                               sex,
-                                               sexe,
-                                               grosbide)]
-) |>
-  tbl_svysummary(
-    include = c(bmigr),
-    by = grosbide,
-    missing = 'no',
-    label = grosbide ~ 'Obésité abdominale',
-    statistic = list(all_categorical() ~ "{p}")
-  ) |>
-  modify_header(label ~ "**Obésité abdominale**") |>
-  add_ci(
-    pattern = "{stat} ({ci})",
-    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
-  )  |>
-  modify_header(all_stat_cols() ~ "**{level}**") |>
-  bold_labels()
-
-tt <- survey::svydesign(
-  id = ~ uid,
-  weights = ~ w2,
-  strata = ~ gstratum + Age,
-  data = steps[enroll == 1 &
-                 !is.na(bigbelly) &
-                 !is.na(bmigr), .(uid,
+                 !is.na(bigbelly), .(uid,
                                   w2,
                                   gstratum,
-                                  Age = agegr,
+                                  agegr,
                                   bmigr,
                                   sexe,
-                                  grosbide)]
+                                  grosbide,
+                                  bigbelly)]
+)
+
+tbl_svysummary(
+  d,
+  include = c(grosbide),
+  missing = 'no',
+  label = list(grosbide ~ "Obésité abdominale"),
+  statistic = list(all_categorical() ~ "{p}")
 ) |>
-  tbl_svysummary(
-    include = c(bmigr),
-    by = grosbide,
-    label = grosbide ~ 'Obésité abdominale',
-    statistic = list(all_categorical() ~ "{p}")
-  ) |>
-  modify_header(label ~ "**Obésité abdominale**") |>
+  modify_header(label ~ "") |>
   add_ci(
     pattern = "{stat} ({ci})",
     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
   )  |>
-  modify_header(all_stat_cols() ~ "**{level}**") |>
-  bold_labels()
-
-tbl_merge(
-    tbls        = list(tf, tm, tt),
-    tab_spanner = c("**Femmes**", "**Hommes**", "**Total**")
-)
-
+  modify_header(stat_0 = "**Prévalence (IC 95%)**") |>
+  bold_labels() |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
 
 ```
+
+### Tableau 2.1.8b Prévalence de l'obésité par sexe
+
+```{r tab_2_1_8b}
+tab <- svyby( ~ bigbelly, ~ sexe, d, svymean, vartype = c("ci"))
+tab[, 2:4] <- round(tab[, 2:4] * 100)
+names(tab) <- c('Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[5] <- "Obésité abdominale (IC95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1, 5)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 2.1.8c Prévalence de l'obésité par âge et sexe
+
+```{r tab_2_1_8c}
+tab <- svyby( ~ bigbelly, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Obésité abdominale (IC95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+# tf <- survey::svydesign(
+#   id = ~ uid,
+#   weights = ~ w2,
+#   strata = ~ gstratum + Age,
+#   data = steps[enroll == 1 &
+#                  !is.na(bmigr) &
+#                  !is.na(bigbelly) & 
+#                  sex == "F", .(uid,
+#                                                w2,
+#                                                gstratum,
+#                                                Age = agegr,
+#                                                bmigr,
+#                                                sexe,
+#                                                grosbide)]
+# ) |>
+#   tbl_svysummary(
+#     include = c(bmigr),
+#     by = grosbide,
+#     missing = 'no',
+#     label = grosbide ~ 'Obésité abdominale',
+#     statistic = list(all_categorical() ~ "{p}")
+#   ) |>
+#   modify_header(label ~ "**Obésité abdominale**") |>
+#   add_ci(
+#     pattern = "{stat} ({ci})",
+#     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+#   )  |>
+#   modify_header(all_stat_cols() ~ "**{level}**") |>
+#   bold_labels()
+# 
+# tm <- survey::svydesign(
+#   id = ~ uid,
+#   weights = ~ w2,
+#   strata = ~ gstratum + Age,
+#   data = steps[enroll == 1 &
+#                  !is.na(bmigr) &
+#                  !is.na(bigbelly) &
+#                  sex == "M", .(uid,
+#                                                w2,
+#                                                gstratum,
+#                                                Age = agegr,
+#                                                bmigr,
+#                                                sex,
+#                                                sexe,
+#                                                grosbide)]
+# ) |>
+#   tbl_svysummary(
+#     include = c(bmigr),
+#     by = grosbide,
+#     missing = 'no',
+#     label = grosbide ~ 'Obésité abdominale',
+#     statistic = list(all_categorical() ~ "{p}")
+#   ) |>
+#   modify_header(label ~ "**Obésité abdominale**") |>
+#   add_ci(
+#     pattern = "{stat} ({ci})",
+#     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+#   )  |>
+#   modify_header(all_stat_cols() ~ "**{level}**") |>
+#   bold_labels()
+# 
+# tt <- survey::svydesign(
+#   id = ~ uid,
+#   weights = ~ w2,
+#   strata = ~ gstratum + Age,
+#   data = steps[enroll == 1 &
+#                  !is.na(bigbelly) &
+#                  !is.na(bmigr), .(uid,
+#                                   w2,
+#                                   gstratum,
+#                                   Age = agegr,
+#                                   bmigr,
+#                                   sexe,
+#                                   grosbide)]
+# ) |>
+#   tbl_svysummary(
+#     include = c(bmigr),
+#     by = grosbide,
+#     label = grosbide ~ 'Obésité abdominale',
+#     statistic = list(all_categorical() ~ "{p}")
+#   ) |>
+#   modify_header(label ~ "**Obésité abdominale**") |>
+#   add_ci(
+#     pattern = "{stat} ({ci})",
+#     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+#   )  |>
+#   modify_header(all_stat_cols() ~ "**{level}**") |>
+#   bold_labels()
+# 
+# tbl_merge(
+#     tbls        = list(tf, tm, tt),
+#     tab_spanner = c("**Femmes**", "**Hommes**", "**Total**")
+# )
+
+```
+
+
+
 
 ### Figure 2.1.1 Corrélation entre le tour de taille et l'IMC
 
