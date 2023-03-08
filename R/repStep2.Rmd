@@ -32,6 +32,7 @@ library(gtsummary)
 library(flextable)
 library(labelled)
 library(ggplot2)
+library(gt)
 
 load(here('data/report.Rdata'))
 
@@ -449,38 +450,54 @@ d <- survey::svydesign(
                  !is.na(hta), .(uid,
                                   w2,
                                   gstratum,
-                                  Sexe = sexe,
+                                  sexe,
                                   Age = agegr,
                                   hta,
+                                  Obese,
+                                  Education=edu,
                                   HTA)]
 )
 
-# svymean(~hta, d, deff=T)
+t1 <- tbl_uvregression(d,
+    method = svyglm,
+    label = list(gstratum ~ "Archipel", sexe ~ "Sexe", Obese ~ "Obésité"),
+    include = c('gstratum', 'sexe', 'Age', 'Education','Obese'),
+    hide_n = TRUE,
+    y = Obese,
+    method.args = list(family = quasibinomial),
+    exponentiate = TRUE
+  ) |>
+  modify_header(update = list(estimate ~ "**OR (IC 95%)**")) |>
+#  add_q() |>
+  modify_footnote(estimate = "OR = rapport de cotes, IC = intervalle de confiance", abbreviation = TRUE) |>
+  add_significance_stars(hide_se = TRUE,
+                         hide_p = FALSE,
+                         pattern = "{p.value}{stars}")
 
-m1 <-
-  svyglm(HTA ~ Sexe -1,
-         design = d,
-         family = "quasibinomial")
-m2 <-
-  svyglm(HTA ~ Age -1,
-         design = d,
-         family = "quasibinomial")
-t1 <- tbl_regression(m1,
-                     exponentiate = TRUE) |>
-  modify_header(update = list(estimate ~ "**Prevalence (IC 95%)**")) |>
-  modify_footnote(everything() ~ NA, abbreviation = TRUE) |>
-  modify_column_hide(columns = p.value) |>
-  bold_labels()
-  
+m <-
+  svyglm(
+    Obese ~ gstratum + sexe + Age + Education,
+    design = d,
+    family = "quasibinomial"
+  )
 
-t2 <- tbl_regression(m2,
-                     exponentiate = TRUE) |>
-  modify_header(update = list(estimate ~ "**Prevalence (IC 95%)**")) |>
-  modify_footnote(everything() ~ NA, abbreviation = TRUE) |>
-  modify_column_hide(columns = p.value) |>
-  bold_labels()
+t2 <- tbl_regression(m,
+               label = list(gstratum ~ "Archipel", sexe ~ "Sexe"),
+               exponentiate = TRUE) |>
+  modify_header(update = list(estimate ~ "**aOR (IC 95%)**")) |>
+  modify_footnote(estimate = "aOR = rapport de cotes ajusté", abbreviation = TRUE) |>
+#  add_global_p() |>
+  add_significance_stars(
+    hide_se = TRUE,
+    hide_p = FALSE,
+    pattern = "{p.value}{stars}"
+  )
+# modify_footnote(everything() ~ NA, abbreviation = TRUE)
 
-tbl_stack(tbls = list(t1, t2))
+tbl_merge(
+  tbls        = list(t1, t2),
+  tab_spanner = c("**Analyse univariée**", "**Analyse multivariée**")
+)
 
 ```
 

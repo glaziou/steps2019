@@ -3133,7 +3133,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.6.5a Activités de forte intensité au travail: nombre de jours par semaine (P5)
+### Tableau 1.6.5a Activités d'intensité modérée au travail: nombre de jours par semaine (P5)
 
 ```{r tab_1_6_5a}
 d <- survey::svydesign(
@@ -3188,7 +3188,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.6.6a Jours d'activités de forte intensité au travail: nombre d'heures par jour (P6)
+### Tableau 1.6.6a Jours d'activités de d'intensité modérée au travail: nombre d'heures par jour (P6)
 
 ```{r tab_1_6_6a}
 d <- survey::svydesign(
@@ -3244,7 +3244,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.6.7a Trajets d'au mopins 10 minutes à pied ou à vélo (P7)
+### Tableau 1.6.7a Trajets d'au moins 10 minutes à pied ou à vélo (P7)
 
 ```{r tab_1_6_7a}
 d <- survey::svydesign(
@@ -3751,7 +3751,7 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
-### Tableau 1.6.16a Comportement édentaire: nombre d'heures par jour (P16)
+### Tableau 1.6.16a Comportement sédentaire: nombre d'heures par jour (P16)
 
 ```{r tab_1_6_16a}
 d <- survey::svydesign(
