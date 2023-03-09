@@ -418,14 +418,21 @@ steps[alcweek.A10g %in% c(77), alcweek.A10g := NA]
 # alcohol grams per day over the past 30 days
 steps[A6 < 77 & A7 < 77, alc.gpd := A6 * A7 / 3]
 # 3 WHO groups of alcohol consumption (30 days) (1 = yes, 2 = no)
-steps[alc.gpd >= 40, alc.cat1 := 2]
-steps[alc.gpd < 40, alc.cat1 := 1]
+steps[sex=="M" & alc.gpd >= 40, alc.cat1 := 2]
+steps[sex=="M" & alc.gpd < 40, alc.cat1 := 1]
+steps[sex=="F" & alc.gpd >= 20, alc.cat1 := 2]
+steps[sex=="F" & alc.gpd < 20, alc.cat1 := 1]
 
-steps[alc.gpd < 40 | alc.gpd >= 60, alc.cat2 := 2]
-steps[alc.cat1==2 & alc.gpd < 60, alc.cat2 := 1]
+steps[sex=="M" & (alc.gpd < 40 | alc.gpd >= 60), alc.cat2 := 2]
+steps[sex=="M" & (alc.cat1==2 & alc.gpd < 60), alc.cat2 := 1]
+steps[sex=="F" & (alc.gpd < 20 | alc.gpd >= 40), alc.cat2 := 2]
+steps[sex=="F" & (alc.cat1==2 & alc.gpd < 40), alc.cat2 := 1]
 
-steps[alc.gpd < 60, alc.cat3 := 2]
-steps[alc.gpd >= 60, alc.cat3 := 1]
+steps[sex=="M" & alc.gpd < 60, alc.cat3 := 2]
+steps[sex=="M" & alc.gpd >= 60, alc.cat3 := 1]
+steps[sex=="F" & alc.gpd < 40, alc.cat3 := 2]
+steps[sex=="F" & alc.gpd >= 40, alc.cat3 := 1]
+
 
 # alcohol grams per day over the past 7 days (1 = yes, 2 = no)
 steps[, alc.gpd7 := (
@@ -439,6 +446,76 @@ steps[diet.fruits_serv.D2 < 77 & diet.vegetables_serv.D4 < 77,
 steps[fruitveg >= 5, fruitveg5 := 1]
 steps[fruitveg < 5, fruitveg5 := 0]
 
+
+# Categories of physical activity (low, med, high)
+steps[physical.P2==77, physical.P2 := NA]
+steps[physical.P3.P3a==77, physical.P3.P3a := NA]
+steps[physical.P3.P3b==77, physical.P3.P3b := NA]
+steps[physical.P5==77, physical.P5 := NA]
+steps[physical.P6.P6a==77, physical.P6.P6a := NA]
+steps[physical.P6.P6b==77, physical.P6.P6b := NA]
+steps[physical.P8==77, physical.P8 := NA]
+steps[physical.P9.P9a==77, physical.P9.P9a := NA]
+steps[physical.P9.P9b==77, physical.P9.P9b := NA]
+
+steps[(8 * (((physical.P2 / 7) * (physical.P3.P3a * 60 + physical.P3.P3b)) + 
+              ((physical.P11 / 7) * (physical.P12.P12a * 60 + physical.P12.P12b))) >= 1500) | 
+        (4 * ((physical.P5 / 7) * (physical.P6.P6a * 60 + physical.P6.P6b)) +
+           4 * ((physical.P14 / 7) * (physical.P15.P15a * 60 + physical.P15.P15b)) +
+        4 * ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)) >= 3000), 
+      met.high := 1]
+steps[enroll==1 & is.na(met.high), met.high := 0]
+
+steps[met.high == 0 &
+        ((physical.P2 >= 3 &
+            (physical.P3.P3a >= 1 | physical.P3.P3b >= 20)) |
+           (physical.P11 >= 3 &
+              (physical.P12.P12a >= 1 | physical.P12.P12b >= 20)) |
+           (physical.P5 >= 5 &
+              (physical.P6.P6a >= 1 | physical.P6.P6b >= 30)) |
+           (physical.P14 >= 3 &
+              (physical.P15.P15a >= 1 | physical.P15.P15b >= 20)) |
+           (physical.P8 >= 5 &
+              ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)
+              ) >= 600)), met.med := 1]
+steps[enroll==1 & is.na(met.med), met.med := 0]
+
+steps[met.high==0 & met.med==0, met.low := 1]
+steps[enroll==1 & is.na(met.low), met.low := 0]
+
+
+
+steps[((physical.P2 < 3 &
+            (physical.P3.P3a == 0 | physical.P3.P3b < 20)) |
+           (physical.P5 < 5 &
+              (physical.P6.P6a == 0 | physical.P6.P6b < 30))), met.work.low := 1]
+steps[enroll==1 & is.na(met.work.low), met.work.low := 0]
+
+steps[((physical.P11 < 3 &
+          (physical.P12.P12a == 0 | physical.P12.P12b < 20)) |
+         (physical.P14 < 5 &
+            (physical.P15.P15a == 0 | physical.P15.P15b < 30))), met.sport.low := 1]
+steps[enroll==1 & is.na(met.sport.low), met.sport.low := 0]
+
+steps[(physical.P8 >= 5 &
+         ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)
+         ) < 600), met.move.low := 1]
+steps[enroll==1 & is.na(met.move.low), met.move.low := 0]
+
+
+
+
+# number of risk factors and combined risk >= 3 risk factors
+steps[, n.risk := rowSums(cbind(tobacco.T2==1, 
+                       fruitveg5==0, 
+                       met.low==1,
+                       overweight==1,
+                       hta==1), na.rm=T)]
+steps[n.risk >= 3, c.risk := 1]
+steps[n.risk < 3, c.risk := 0]
+
+steps[n.risk == 0, zero.risk := 1]
+steps[n.risk > 0, zero.risk := 0]
 
 
 #' save

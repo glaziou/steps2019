@@ -3807,6 +3807,346 @@ gt::gt(tab, groupname_col = 'Sexe') |>
 
 
 
+### Tableau 1.6.17a Activité physique limitée
+
+```{r tab_1_6_17a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = met.low,
+    Var = factor(met.low, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique limitée"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 1.6.17b Activité physique limitée, par âge et sexe
+
+```{r tab_1_6_17b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique limitée (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.6.18a Activité physique modérée
+
+```{r tab_1_6_18a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = met.med,
+    Var = factor(met.med, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique modérée"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 1.6.18b Activité physique modére, par âge et sexe
+
+```{r tab_1_6_18b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique modérée (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+### Tableau 1.6.19a Activité physique élevée
+
+```{r tab_1_6_19a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = met.high,
+    Var = factor(met.high, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique élevée"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 1.6.19b Activité physique élevée, par âge et sexe
+
+```{r tab_1_6_19b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique élevée (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+
+### Tableau 1.6.20a Activité physique limitée au travail
+
+```{r tab_1_6_20a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = met.work.low,
+    Var = factor(met.work.low, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique limitée"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 1.6.20b Activité physique limitée au travail, par âge et sexe
+
+```{r tab_1_6_20b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique limitée (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+### Tableau 1.6.21a Activité sportive limitée
+
+```{r tab_1_6_21a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = met.sport.low,
+    Var = factor(met.sport.low, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité sportive limitée"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 1.6.21b Activité sportive limitée, par âge et sexe
+
+```{r tab_1_6_21b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique limitée (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+### Tableau 1.6.22a Activité physique en déplacement limitée 
+
+```{r tab_1_6_22a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = met.move.low,
+    Var = factor(met.move.low, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Activité physique en déplacement limitée"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 1.6.22b Activité physique en déplacement limitée, par âge et sexe
+
+```{r tab_1_6_22b}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Activité physique en déplacement limitée (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
 
 
 ## 1.7 Qualité de vie
@@ -3861,7 +4201,6 @@ tbl_svysummary(d,
   bold_labels()
 
 ```
-
 
 
 

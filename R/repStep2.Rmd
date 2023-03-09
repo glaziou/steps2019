@@ -913,3 +913,136 @@ tbl_merge(
 )
 
 ```
+
+## 2.5 Facteurs de risque combiné
+
+## Tableau 2.5.1 Absence de facteur de risque
+```{r tab_2_5_1a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = zero.risk,
+    Var = factor(zero.risk, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Absence de facteur de risque"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 2.5.1b Activité physique en déplacement limitée, suivant le sexe
+
+```{r tab_2_5_1b}
+tab <- svyby( ~ var, ~ sexe, d, svymean, vartype = c("ci"))
+tab[, 2:4] <- round(tab[, 2:4] * 100)
+names(tab) <- c('Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[5] <- "Absence de facteur de risque (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1, 5)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+
+## Tableau 2.5.2 Au moins trois facteurs de risque
+```{r tab_2_5_2a}
+d <- survey::svydesign(
+  id = ~ uid,
+  weights = ~ w1,
+  strata = ~ gstratum + agegr,
+  data = steps[enroll == 1, .(
+    uid,
+    w1,
+    gstratum,
+    agegr,
+    bmigr,
+    sexe,
+    var = c.risk,
+    Var = factor(c.risk, levels=1:0, labels=c('Oui','Non'))
+  )]
+)
+
+tbl_svysummary(d,
+               include = c(Var),
+               label = list(Var ~ "Au moins 3 facteurs de risque"),
+               statistic = list(all_categorical() ~ "{p}")) |>
+  modify_header(label ~ "") |>
+  add_ci(
+    pattern = "{stat} ({ci})",
+    statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+  )  |>
+  modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+  bold_labels() |>
+  modify_footnote(update = everything() ~ NA) |>
+  remove_row_type(type='level', level_value = 'Non') |>
+  remove_row_type(type='header')
+
+```
+
+### Tableau 2.5.2b Au moins trois facteurs de risque, suivant le sexe
+
+```{r tab_5_5_2b}
+tab <- svyby( ~ var, ~ sexe, d, svymean, vartype = c("ci"))
+tab[, 2:4] <- round(tab[, 2:4] * 100)
+names(tab) <- c('Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[5] <- "Au moins trois facteurs de risque (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1, 5)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
+
+### Tableau 2.5.2c Au moins trois facteurs de risque, par âge et sexe
+
+```{r tab_2_5_2c}
+tab <- svyby( ~ var, ~ agegr + sexe, d, svymean, vartype = c("ci"))
+tab[, 3:5] <- round(tab[, 3:5] * 100)
+names(tab) <- c('Age', 'Sexe', 'obese', 'lo', 'hi')
+tab$gros <- paste0(tab$obese, ' (', tab$lo, ' - ', tab$hi, ')')
+names(tab)[6] <- "Au moins trois facteurs de risque (IC 95%)"
+rownames(tab) <- NULL
+tab <- tab[, c(1:2, 6)]
+gt::gt(tab, groupname_col = 'Sexe') |> 
+ gt::tab_style(
+     locations = cells_column_labels(columns = everything()),
+     style     = list(
+       cell_text(weight = "bold")
+     )
+   )
+
+```
