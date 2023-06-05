@@ -458,11 +458,31 @@ steps[physical.P8==77, physical.P8 := NA]
 steps[physical.P9.P9a==77, physical.P9.P9a := NA]
 steps[physical.P9.P9b==77, physical.P9.P9b := NA]
 
-steps[(8 * (((physical.P2 / 7) * (physical.P3.P3a * 60 + physical.P3.P3b)) + 
-              ((physical.P11 / 7) * (physical.P12.P12a * 60 + physical.P12.P12b))) >= 1500) | 
-        (4 * ((physical.P5 / 7) * (physical.P6.P6a * 60 + physical.P6.P6b)) +
-           4 * ((physical.P14 / 7) * (physical.P15.P15a * 60 + physical.P15.P15b)) +
-        4 * ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)) >= 3000), 
+# steps[(8 * (((physical.P2 / 7) * (physical.P3.P3a * 60 + physical.P3.P3b)) + 
+#               ((physical.P11 / 7) * (physical.P12.P12a * 60 + physical.P12.P12b))) >= 1500) | 
+#         (4 * ((physical.P5 / 7) * (physical.P6.P6a * 60 + physical.P6.P6b)) +
+#            4 * ((physical.P14 / 7) * (physical.P15.P15a * 60 + physical.P15.P15b)) +
+#         4 * ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)) >= 3000), 
+#       met.high := 1]
+# steps[enroll==1 & is.na(met.high), met.high := 0]
+# 
+# steps[met.high == 0 &
+#         ((physical.P2 >= 3 &
+#             (physical.P3.P3a >= 1 | physical.P3.P3b >= 20)) |
+#            (physical.P11 >= 3 &
+#               (physical.P12.P12a >= 1 | physical.P12.P12b >= 20)) |
+#            (physical.P5 >= 5 &
+#               (physical.P6.P6a >= 1 | physical.P6.P6b >= 30)) |
+#            (physical.P14 >= 3 &
+#               (physical.P15.P15a >= 1 | physical.P15.P15b >= 20)) |
+#            (physical.P8 >= 5 &
+#               ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)
+#               ) >= 600)), met.med := 1]
+steps[(8 * ((physical.P2 * (physical.P3.P3a * 60 + physical.P3.P3b)) + 
+              (physical.P11 * (physical.P12.P12a * 60 + physical.P12.P12b))) >= 1500) | 
+        (4 * (physical.P5 * (physical.P6.P6a * 60 + physical.P6.P6b)) +
+           4 * (physical.P14 * (physical.P15.P15a * 60 + physical.P15.P15b)) +
+           4 * (physical.P8 * (physical.P9.P9a * 60 + physical.P9.P9b)) >= 3000), 
       met.high := 1]
 steps[enroll==1 & is.na(met.high), met.high := 0]
 
@@ -476,8 +496,9 @@ steps[met.high == 0 &
            (physical.P14 >= 3 &
               (physical.P15.P15a >= 1 | physical.P15.P15b >= 20)) |
            (physical.P8 >= 5 &
-              ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)
+              (physical.P8 * (physical.P9.P9a * 60 + physical.P9.P9b)
               ) >= 600)), met.med := 1]
+
 steps[enroll==1 & is.na(met.med), met.med := 0]
 
 steps[met.high==0 & met.med==0, met.low := 1]
@@ -497,8 +518,11 @@ steps[((physical.P11 < 3 &
             (physical.P15.P15a == 0 | physical.P15.P15b < 30))), met.sport.low := 1]
 steps[enroll==1 & is.na(met.sport.low), met.sport.low := 0]
 
+# steps[(physical.P8 >= 5 &
+#          ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)
+#          ) < 600), met.move.low := 1]
 steps[(physical.P8 >= 5 &
-         ((physical.P8 / 7) * (physical.P9.P9a * 60 + physical.P9.P9b)
+         (physical.P8 * (physical.P9.P9a * 60 + physical.P9.P9b)
          ) < 600), met.move.low := 1]
 steps[enroll==1 & is.na(met.move.low), met.move.low := 0]
 

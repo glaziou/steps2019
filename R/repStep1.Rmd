@@ -3826,10 +3826,12 @@ d <- survey::svydesign(
   )]
 )
 
-tbl_svysummary(d,
-               include = c(Var),
-               label = list(Var ~ "Activité physique limitée"),
-               statistic = list(all_categorical() ~ "{p}")) |>
+tbl_svysummary(
+  d,
+  include = c(Var),
+  label = list(Var ~ "Activité physique limitée"),
+  statistic = list(all_categorical() ~ "{p}")
+) |>
   modify_header(label ~ "") |>
   add_ci(
     pattern = "{stat} ({ci})",
@@ -3838,8 +3840,26 @@ tbl_svysummary(d,
   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
   bold_labels() |>
   modify_footnote(update = everything() ~ NA) |>
-  remove_row_type(type='level', level_value = 'Non') |>
-  remove_row_type(type='header')
+  remove_row_type(type = 'level', level_value = 'Non') |>
+  remove_row_type(type = 'header')
+
+# tbl_svysummary(
+#   d,
+#   include = c(Var),
+#   by = agegr,
+#   label = list(Var ~ "Activité physique limitée"),
+#   statistic = list(all_categorical() ~ "{p}")
+# ) |>
+#   modify_header(label ~ "") |>
+#   add_ci(
+#     pattern = "{stat} ({ci})",
+#     statistic = list(all_categorical() ~ "{conf.low} - {conf.high}")
+#   )  |>
+#   modify_header(stat_0 = "**Pourcentage (IC 95%)**") |>
+#   bold_labels() |>
+#   modify_footnote(update = everything() ~ NA) |>
+#   remove_row_type(type = 'level', level_value = 'Non') |>
+#   remove_row_type(type = 'header')
 
 ```
 
